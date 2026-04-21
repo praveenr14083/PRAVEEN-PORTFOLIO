@@ -4,6 +4,8 @@ import morgan from "morgan";
 
 import projectRoutes from "./routes/project.routes.js";
 import technologyRoutes from "./routes/technology.routes.js";
+import skillRoutes from "./routes/skill.routes.js";
+
 import { errorMiddleware } from "./middleware/error.middleware.js";
 
 const app = express();
@@ -20,6 +22,7 @@ app.get("/", (req, res) => {
 // routes
 app.use("/api/projects", projectRoutes);
 app.use("/api/technologies", technologyRoutes);
+app.use("/api/skills", skillRoutes);
 
 // 404
 app.use((req, res) => {
