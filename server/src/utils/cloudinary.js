@@ -1,11 +1,12 @@
 import cloudinary from "../config/cloudinary.config.js";
 
-export const deleteFromCloudinary = async (public_id) => {
+export const deleteFromCloudinary = async (
+  public_id,
+  resource_type = "image",
+) => {
   if (!public_id) return;
-  try {
-    await cloudinary.uploader.destroy(public_id);
-  } catch (err) {
-    console.error("Error deleting from Cloudinary:", err);
-    throw err;
-  }
+
+  return await cloudinary.uploader.destroy(public_id, {
+    resource_type, // 🔥 THIS IS THE FIX
+  });
 };

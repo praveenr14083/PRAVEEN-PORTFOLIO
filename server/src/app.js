@@ -6,6 +6,7 @@ import projectRoutes from "./routes/project.routes.js";
 import technologyRoutes from "./routes/technology.routes.js";
 import skillRoutes from "./routes/skill.routes.js";
 import certificateRoutes from "./routes/certificate.routes.js";
+import resumeRoutes from "./routes/resume.routes.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
 
@@ -25,6 +26,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/technologies", technologyRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/certificates", certificateRoutes);
+app.use("/api/resume", resumeRoutes);
 
 // 404
 app.use((req, res) => {
