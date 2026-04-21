@@ -39,8 +39,8 @@ const projectSchema = new mongoose.Schema(
     liveUrl: String,
     githubUrl: String,
     image: {
-      type: String,
-      default: null,
+      url: String,
+      public_id: String,
     },
   },
   { timestamps: true },

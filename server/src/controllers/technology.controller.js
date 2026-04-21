@@ -5,7 +5,9 @@ export const createTechnology = async (req, res, next) => {
   try {
     const data = {
       ...req.body,
-      icon: req.file?.path || undefined,
+      icon: req.file
+        ? { url: req.file.path, public_id: req.file.filename }
+        : undefined,
     };
     const tech = await techService.createTechnology(data);
     return successResponse(res, tech, "Technology created", 201);
@@ -42,7 +44,7 @@ export const updateTechnology = async (req, res, next) => {
     const data = {
       ...req.body,
       ...(req.file && {
-        icon: req.file.path,
+        icon: { url: req.file.path, public_id: req.file.filename },
       }),
     };
     const tech = await techService.updateTechnology(req.params.id, data);

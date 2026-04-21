@@ -5,7 +5,9 @@ export const createProject = async (req, res, next) => {
   try {
     const data = {
       ...req.body,
-      image: req.file?.path || undefined, // ✅ use req.file for single upload
+      image: req.file
+        ? { url: req.file.path, public_id: req.file.filename }
+        : undefined,
     };
 
     const project = await projectService.createProject(data);
@@ -43,7 +45,7 @@ export const updateProject = async (req, res, next) => {
     const data = {
       ...req.body,
       ...(req.file && {
-        image: req.file.path, // ✅ use req.file for single upload
+        image: { url: req.file.path, public_id: req.file.filename },
       }),
     };
 

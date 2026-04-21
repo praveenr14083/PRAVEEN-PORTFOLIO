@@ -8,7 +8,8 @@ const technologySchema = new mongoose.Schema(
       trim: true,
     },
     icon: {
-      type: String,
+      url: String,
+      public_id: String,
     },
     category: {
       type: String,

@@ -1,4 +1,5 @@
 import Project from "../models/project.model.js";
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 
 export const createProject = async (data) => {
   return await Project.create(data);
@@ -22,5 +23,14 @@ export const updateProject = async (id, data) => {
 };
 
 export const deleteProject = async (id) => {
+  const project = await Project.findById(id);
+
+  if (!project) return null;
+
+  // Delete image from Cloudinary if it exists
+  if (project.image?.public_id) {
+    await deleteFromCloudinary(project.image.public_id);
+  }
+
   return await Project.findByIdAndDelete(id);
 };
