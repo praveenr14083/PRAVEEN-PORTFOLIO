@@ -7,8 +7,11 @@ export const uploadTo = (folderName) => {
     cloudinary,
     params: {
       folder: `portfolio_${folderName}`,
-      resource_type: "auto", // 🔥 important for PDF
-      allowed_formats: ["jpg", "png", "jpeg", "webp", "pdf"],
+      resource_type: "auto", // 🔥 important for PDF and other formats
+      allowed_formats:
+        folderName === "technologies"
+          ? ["jpg", "png", "jpeg", "webp", "svg", "ico", "gif"]
+          : ["jpg", "png", "jpeg", "webp", "pdf"],
       public_id: (req, file) =>
         `${Date.now()}-${file.originalname.split(".")[0]}`,
     },

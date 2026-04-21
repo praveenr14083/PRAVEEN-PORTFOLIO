@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import swaggerUi from "swagger-ui-express";
 
 import projectRoutes from "./routes/project.routes.js";
+import technologyRoutes from "./routes/technology.routes.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 
 const app = express();
@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 // routes
 app.use("/api/projects", projectRoutes);
+app.use("/api/technologies", technologyRoutes);
 
 // 404
 app.use((req, res) => {
