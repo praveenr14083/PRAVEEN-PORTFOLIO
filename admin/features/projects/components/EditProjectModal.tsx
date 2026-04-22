@@ -19,27 +19,16 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { X, Upload } from "lucide-react"
-
-type ProjectFormData = {
-  title: string
-  description: string
-  technologies: string
-  category: string
-  status: "draft" | "published"
-  featured: boolean
-  liveUrl: string
-  githubUrl: string
-  image: {
-    url: string
-    public_id: string
-  }
-}
+import { X, Upload, Loader2 } from "lucide-react"
+import { useUpdateProject } from "../hooks/useProjects"
+import { projectSchema, ProjectInput } from "../validation/project.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type EditProjectModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  project?: ProjectFormData | null
+  project?: (ProjectInput & { _id: string, image?: { url: string; public_id: string } }) | any | null
 }
 
 export function EditProjectModal({
@@ -47,7 +36,7 @@ export function EditProjectModal({
   onOpenChange,
   project,
 }: EditProjectModalProps) {
-  const [formData, setFormData] = useState<ProjectFormData>({
+  const [formData, setFormData] = useState<ProjectInput>({
     title: "",
     description: "",
     technologies: "",
@@ -56,11 +45,13 @@ export function EditProjectModal({
     featured: false,
     liveUrl: "",
     githubUrl: "",
-    image: {
-      url: "",
-      public_id: "",
-    },
   })
+
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: updateProjectDetails, isPending } = useUpdateProject()
 
   const categories = [
     "Web Development",
@@ -73,33 +64,88 @@ export function EditProjectModal({
 
   useEffect(() => {
     if (project) {
-      setFormData(project)
+      setFormData({
+        title: project.title || "",
+        description: project.description || "",
+        technologies: Array.isArray(project.technologies) ? project.technologies.join(", ") : project.technologies || "",
+        category: project.category || "Other",
+        status: project.status || "draft",
+        featured: project.featured || false,
+        liveUrl: project.liveUrl || "",
+        githubUrl: project.githubUrl || "",
+      })
+      if (project.image?.url) {
+        setPreviewUrl(project.image.url)
+      } else {
+        setPreviewUrl("")
+      }
+      setImageFile(null)
+      setErrors({})
     }
   }, [project])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setFormData((prev) => ({
-        ...prev,
-        image: {
-          url: previewUrl,
-          public_id: "",
-        },
-      }))
+      setImageFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
     }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Updated Project:", formData)
-    onOpenChange(false)
+    if (!project?._id) return
+
+    setErrors({})
+    try {
+      projectSchema.parse(formData)
+      
+      const submitData = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, String(value))
+      })
+      if (imageFile) {
+        submitData.append("image", imageFile)
+      }
+      
+      updateProjectDetails({ id: project._id, formData: submitData }, {
+        onSuccess: () => {
+          onOpenChange(false)
+        }
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach(e => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     if (project) {
-      setFormData(project)
+      setFormData({
+        title: project.title || "",
+        description: project.description || "",
+        technologies: Array.isArray(project.technologies) ? project.technologies.join(", ") : project.technologies || "",
+        category: project.category || "Other",
+        status: project.status || "draft",
+        featured: project.featured || false,
+        liveUrl: project.liveUrl || "",
+        githubUrl: project.githubUrl || "",
+      })
+      if (project.image?.url) {
+        setPreviewUrl(project.image.url)
+      } else {
+        setPreviewUrl("")
+      }
+      setImageFile(null)
+      setErrors({})
     }
   }
 
@@ -122,6 +168,7 @@ export function EditProjectModal({
               }
               placeholder="Enter project title"
             />
+            {errors.title && <span className="text-sm text-red-500">{errors.title}</span>}
           </div>
 
           {/* Description */}
@@ -136,6 +183,7 @@ export function EditProjectModal({
               placeholder="Enter project description"
               rows={4}
             />
+            {errors.description && <span className="text-sm text-red-500">{errors.description}</span>}
           </div>
 
           {/* Category */}
@@ -171,6 +219,7 @@ export function EditProjectModal({
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />
+            {errors.technologies && <span className="text-sm text-red-500">{errors.technologies}</span>}
           </div>
 
           {/* Live URL */}
@@ -218,10 +267,10 @@ export function EditProjectModal({
                 className="hidden"
               />
 
-              {formData.image.url ? (
+              {previewUrl ? (
                 <div className="relative w-full">
                   <img
-                    src={formData.image.url}
+                    src={previewUrl}
                     alt="Preview"
                     className="h-48 w-full rounded-lg object-cover"
                   />
@@ -229,10 +278,8 @@ export function EditProjectModal({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      setFormData((prev) => ({
-                        ...prev,
-                        image: { url: "", public_id: "" },
-                      }))
+                      setImageFile(null)
+                      setPreviewUrl("")
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
@@ -290,6 +337,7 @@ export function EditProjectModal({
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false)
                 resetForm()
@@ -297,7 +345,10 @@ export function EditProjectModal({
             >
               Cancel
             </Button>
-            <Button type="submit">Update Project</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Project
+            </Button>
           </div>
         </form>
       </DialogContent>

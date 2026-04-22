@@ -15,13 +15,14 @@ import { Pen, Trash, Calendar, MapPin } from "lucide-react"
 
 type ExperienceCardProps = {
   experience: {
+    _id?: string
     role?: string
     company?: string
     location?: string
     employmentType?: string
     description?: string
     startDate?: string
-    endDate?: string
+    endDate?: string | null
     isCurrent?: boolean
   }
   onEdit?: (experience: any) => void
@@ -33,9 +34,10 @@ export function ExperienceCard({
   onEdit,
   onDelete,
 }: ExperienceCardProps) {
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | undefined | null) => {
     if (!dateString) return ""
     const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ""
     return date.toLocaleDateString("en-US", { year: "numeric", month: "short" })
   }
 
@@ -98,7 +100,7 @@ export function ExperienceCard({
           <Button
             size="sm"
             variant="destructive"
-            onClick={() => onDelete(experience.role || "experience")}
+            onClick={() => onDelete(experience._id || "")}
             className="gap-1"
           >
             <Trash className="h-4 w-4" />

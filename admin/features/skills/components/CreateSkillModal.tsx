@@ -12,7 +12,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
+import { useCreateSkill } from "../hooks/useSkills"
+import { skillSchema, SkillInput } from "../validation/skill.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type SkillFormData = {
   name: string
@@ -29,12 +33,45 @@ export function CreateSkillModal() {
     icon: "code",
     technologies: "",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: createSkill, isPending } = useCreateSkill()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Skill Form Data:", formData)
-    setOpen(false)
-    resetForm()
+    setErrors({})
+    try {
+      const technologiesArray = formData.technologies
+        ? formData.technologies.split(",").map((tech) => tech.trim())
+        : []
+
+      const skillData: SkillInput = {
+        name: formData.name,
+        description: formData.description,
+        icon: formData.icon,
+        technologies: technologiesArray,
+      }
+
+      skillSchema.parse(skillData)
+
+      createSkill(skillData, {
+        onSuccess: () => {
+          setOpen(false)
+          resetForm()
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
@@ -44,6 +81,7 @@ export function CreateSkillModal() {
       icon: "code",
       technologies: "",
     })
+    setErrors({})
   }
 
   return (
@@ -70,9 +108,10 @@ export function CreateSkillModal() {
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="e.g., React, TypeScript, etc."
-              required
-              minLength={2}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -127,6 +166,7 @@ export function CreateSkillModal() {
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 setOpen(false)
                 resetForm()
@@ -134,7 +174,10 @@ export function CreateSkillModal() {
             >
               Cancel
             </Button>
-            <Button type="submit">Create Skill</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Skill
+            </Button>
           </div>
         </form>
       </DialogContent>

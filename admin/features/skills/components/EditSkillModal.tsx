@@ -12,6 +12,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
+import { Loader2 } from "lucide-react"
+import { useUpdateSkill } from "../hooks/useSkills"
+import { skillSchema, SkillInput } from "../validation/skill.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
+
 type SkillFormData = {
   name: string
   description: string
@@ -22,7 +28,7 @@ type SkillFormData = {
 type EditSkillModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  skill?: SkillFormData | null
+  skill?: (SkillFormData & { _id: string }) | any | null
 }
 
 export function EditSkillModal({
@@ -36,6 +42,9 @@ export function EditSkillModal({
     icon: "code",
     technologies: "",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: updateSkill, isPending } = useUpdateSkill()
 
   const iconOptions = [
     "code",
@@ -50,19 +59,70 @@ export function EditSkillModal({
 
   useEffect(() => {
     if (skill) {
-      setFormData(skill)
+      setFormData({
+        name: skill.name || "",
+        description: skill.description || "",
+        icon: skill.icon || "code",
+        technologies: Array.isArray(skill.technologies)
+          ? skill.technologies.join(", ")
+          : skill.technologies || "",
+      })
+      setErrors({})
     }
   }, [skill])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Updated Skill Data:", formData)
-    onOpenChange(false)
+    if (!skill?._id) return
+
+    setErrors({})
+    try {
+      const technologiesArray = formData.technologies
+        ? formData.technologies.split(",").map((tech) => tech.trim())
+        : []
+
+      const skillData: SkillInput = {
+        name: formData.name,
+        description: formData.description,
+        icon: formData.icon,
+        technologies: technologiesArray,
+      }
+
+      skillSchema.parse(skillData)
+
+      updateSkill(
+        { id: skill._id, skillData },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
+        }
+      )
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     if (skill) {
-      setFormData(skill)
+      setFormData({
+        name: skill.name || "",
+        description: skill.description || "",
+        icon: skill.icon || "code",
+        technologies: Array.isArray(skill.technologies)
+          ? skill.technologies.join(", ")
+          : skill.technologies || "",
+      })
+      setErrors({})
     }
   }
 
@@ -84,9 +144,10 @@ export function EditSkillModal({
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="e.g., React, TypeScript, etc."
-              required
-              minLength={2}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -141,6 +202,7 @@ export function EditSkillModal({
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false)
                 resetForm()
@@ -148,7 +210,10 @@ export function EditSkillModal({
             >
               Cancel
             </Button>
-            <Button type="submit">Update Skill</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Skill
+            </Button>
           </div>
         </form>
       </DialogContent>

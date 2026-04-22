@@ -1,4 +1,5 @@
 import { MainLayout } from "@/layout/MainLayout"
+import { ProtectedRoute } from "@/components/common/ProtectedRoute"
 import React from "react"
 
 export default function MainLayoutWrapper({
@@ -6,5 +7,9 @@ export default function MainLayoutWrapper({
 }: {
   children: React.ReactNode
 }) {
-  return <MainLayout>{children}</MainLayout>
+  return (
+    <ProtectedRoute>
+      <MainLayout>{children}</MainLayout>
+    </ProtectedRoute>
+  )
 }

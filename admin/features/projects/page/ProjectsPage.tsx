@@ -12,7 +12,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import { RotateCcw, ChevronDown } from "lucide-react"
+import { RotateCcw, ChevronDown, RotateCw } from "lucide-react"
+import { useProjects, useDeleteProject } from "../hooks/useProjects"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type ProjectFormData = {
   title: string
@@ -34,43 +36,10 @@ export default function ProjectsPage() {
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedProject, setSelectedProject] =
-    useState<ProjectFormData | null>(null)
+  const [selectedProject, setSelectedProject] = useState<any>(null)
 
-  const projects = [
-    {
-      title: "E-Commerce Platform",
-      description:
-        "A full-featured e-commerce platform with payment integration",
-      technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-      category: "Full Stack",
-      status: "published",
-      featured: true,
-      liveUrl: "https://example.com",
-      githubUrl: "https://github.com/example/repo",
-      image: "https://via.placeholder.com/400x200",
-    },
-    {
-      title: "Portfolio Website",
-      description: "Modern portfolio website with animations",
-      technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-      category: "Web Development",
-      status: "published",
-      featured: false,
-      liveUrl: "https://portfolio.com",
-      githubUrl: "https://github.com/example/portfolio",
-      image: "https://via.placeholder.com/400x200",
-    },
-    {
-      title: "Mobile Chat App",
-      description: "Real-time chat application for mobile devices",
-      technologies: ["React Native", "Firebase", "Socket.io"],
-      category: "Mobile App",
-      status: "draft",
-      featured: false,
-      image: "https://via.placeholder.com/400x200",
-    },
-  ]
+  const { data: projects = [], isLoading, refetch } = useProjects()
+  const { mutate: deleteProject } = useDeleteProject()
 
   const categories = [
     "All Categories",
@@ -100,6 +69,13 @@ export default function ProjectsPage() {
     setSelectedCategory("All Categories")
     setSelectedStatus("All Status")
     setSearchTerm("")
+    refetch()
+  }
+
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this project?")) {
+      deleteProject(id)
+    }
   }
 
   // Filter projects based on selections
@@ -187,27 +163,30 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredProjects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            project={project}
-            onEdit={(project) => {
-              setSelectedProject({
-                title: project.title,
-                description: project.description,
-                technologies: project.technologies.join(","),
-                category: project.category,
-                status: project.status,
-                featured: project.featured,
-                liveUrl: project.liveUrl,
-                githubUrl: project.githubUrl,
-                image: project.image || { url: "", public_id: "" },
-              })
-              setEditOpen(true)
-            }}
-            onDelete={(id) => console.log("Delete:", id)}
-          />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-[400px] w-full rounded-xl" />
+          ))
+        ) : filteredProjects.length > 0 ? (
+          filteredProjects.map((project: any) => (
+            <ProjectCard
+              key={project._id}
+              project={project}
+              onEdit={(project) => {
+                setSelectedProject({
+                  ...project,
+                  technologies: project.technologies?.join(", ") || "",
+                })
+                setEditOpen(true)
+              }}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="col-span-full py-20 text-center">
+            <p className="text-muted-foreground">No projects found.</p>
+          </div>
+        )}
       </div>
 
       {/* Edit Project Modal */}

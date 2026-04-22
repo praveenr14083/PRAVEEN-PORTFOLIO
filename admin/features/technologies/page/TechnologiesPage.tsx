@@ -13,66 +13,17 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import { RotateCcw, ChevronDown } from "lucide-react"
-
-type TechnologyFormData = {
-  name: string
-  category: "frontend" | "backend" | "database" | "tools"
-  icon: {
-    url: string
-    public_id: string
-  }
-}
+import { useTechnologies, useDeleteTechnology } from "../hooks/useTechnologies"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function TechnologiesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedTechnology, setSelectedTechnology] =
-    useState<TechnologyFormData | null>(null)
+  const [selectedTechnology, setSelectedTechnology] = useState<any | null>(null)
 
-  // Sample technologies data
-  const technologies = [
-    {
-      name: "React",
-      category: "frontend" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "Vue.js",
-      category: "frontend" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "Node.js",
-      category: "backend" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "Django",
-      category: "backend" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "MongoDB",
-      category: "database" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "PostgreSQL",
-      category: "database" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "Docker",
-      category: "tools" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-    {
-      name: "Git",
-      category: "tools" as const,
-      icon: { url: "https://via.placeholder.com/100", public_id: "" },
-    },
-  ]
+  const { data: technologies = [], isLoading } = useTechnologies()
+  const { mutate: deleteTechnology } = useDeleteTechnology()
 
   const categories = [
     "All Categories",
@@ -102,8 +53,10 @@ export default function TechnologiesPage() {
     setEditOpen(true)
   }
 
-  const handleDelete = (techName: string) => {
-    console.log("Delete technology:", techName)
+  const handleDelete = (techId: string) => {
+    if (confirm("Are you sure you want to delete this technology?")) {
+      deleteTechnology(techId)
+    }
   }
 
   return (
@@ -144,7 +97,13 @@ export default function TechnologiesPage() {
       </div>
 
       {/* Technologies Grid */}
-      {filteredTechnologies.length > 0 ? (
+      {isLoading ? (
+        <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : filteredTechnologies.length > 0 ? (
         <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {filteredTechnologies.map((technology, index) => (
             <TechnologyCard

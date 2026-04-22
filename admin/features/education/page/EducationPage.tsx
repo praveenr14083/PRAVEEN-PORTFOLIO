@@ -7,6 +7,8 @@ import { EditEducationModal } from "../components/EditEducationModal"
 import { EducationCard } from "../components/EducationCard"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
+import { useEducation, useDeleteEducation } from "../hooks/useEducation"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type EducationFormData = {
   degree: string
@@ -22,32 +24,10 @@ type EducationFormData = {
 export default function EducationPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedEducation, setSelectedEducation] =
-    useState<EducationFormData | null>(null)
+  const [selectedEducation, setSelectedEducation] = useState<any | null>(null)
 
-  // Sample education data
-  const educationList = [
-    {
-      degree: "Bachelor of Science in Computer Science",
-      institute: "State University",
-      location: "New York, USA",
-      startDate: "2019-09-01",
-      endDate: "2023-05-31",
-      isCurrent: false,
-      grade: "3.8",
-      gradeType: "CGPA",
-    },
-    {
-      degree: "Master of Science in Data Science",
-      institute: "Tech Institute",
-      location: "California, USA",
-      startDate: "2023-09-01",
-      endDate: "",
-      isCurrent: true,
-      grade: "3.9",
-      gradeType: "CGPA",
-    },
-  ]
+  const { data: educationList = [], isLoading } = useEducation()
+  const { mutate: deleteEducation } = useDeleteEducation()
 
   const handleReset = () => {
     setSearchTerm("")
@@ -64,8 +44,10 @@ export default function EducationPage() {
     setEditOpen(true)
   }
 
-  const handleDelete = (degree: string) => {
-    console.log("Delete education:", degree)
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this education record?")) {
+      deleteEducation(id)
+    }
   }
 
   return (
@@ -84,7 +66,13 @@ export default function EducationPage() {
       </div>
 
       {/* Education List */}
-      {filteredEducation.length > 0 ? (
+      {isLoading ? (
+        <div className="mt-4 space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : filteredEducation.length > 0 ? (
         <div className="mt-4 space-y-4">
           {filteredEducation.map((education, index) => (
             <EducationCard

@@ -1,5 +1,5 @@
-import React from "react"
+import LoginPage from "@/features/auth/page/LoginPage"
 
 export default function LoginPageRoute() {
-  return <div>LoginPageRoute</div>
+  return <LoginPage />
 }

@@ -7,6 +7,7 @@ import { Pen, Trash } from "lucide-react"
 
 type CertificateCardProps = {
   certificate: {
+    _id?: string
     name?: string
     image?: {
       url: string
@@ -67,7 +68,7 @@ export function CertificateCard({
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDelete(certificate.name || "certificate")}
+                onClick={() => onDelete(certificate._id || "")}
                 className="gap-1"
               >
                 <Trash className="h-4 w-4" />

@@ -20,22 +20,17 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
+import { useCreateEducation } from "../hooks/useEducation"
+import { educationSchema, EducationInput } from "../validation/education.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
-type EducationFormData = {
-  degree: string
-  institute: string
-  location: string
-  startDate: string
-  endDate: string
-  isCurrent: boolean
-  grade: string
-  gradeType: "CGPA" | "Percentage" | "GPA"
-}
+
 
 export function CreateEducationModal() {
   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState<EducationFormData>({
+  const [formData, setFormData] = useState<EducationInput>({
     degree: "",
     institute: "",
     location: "",
@@ -45,14 +40,39 @@ export function CreateEducationModal() {
     grade: "",
     gradeType: "CGPA",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const gradeTypes = ["CGPA", "Percentage", "GPA"]
+  const { mutate: createEducation, isPending } = useCreateEducation()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Education Data:", formData)
-    setOpen(false)
-    resetForm()
+    setErrors({})
+    try {
+      const dataToParse = {
+        ...formData,
+        endDate: formData.isCurrent ? null : (formData.endDate || null)
+      }
+      educationSchema.parse(dataToParse)
+
+      createEducation(dataToParse, {
+        onSuccess: () => {
+          setOpen(false)
+          resetForm()
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
@@ -66,6 +86,7 @@ export function CreateEducationModal() {
       grade: "",
       gradeType: "CGPA",
     })
+    setErrors({})
   }
 
   return (
@@ -92,8 +113,10 @@ export function CreateEducationModal() {
                 setFormData({ ...formData, degree: e.target.value })
               }
               placeholder="e.g., Bachelor of Science in Computer Science"
-              required
             />
+            {errors.degree && (
+              <p className="text-sm text-red-500">{errors.degree}</p>
+            )}
           </div>
 
           {/* Institute */}
@@ -106,8 +129,10 @@ export function CreateEducationModal() {
                 setFormData({ ...formData, institute: e.target.value })
               }
               placeholder="e.g., XYZ University"
-              required
             />
+            {errors.institute && (
+              <p className="text-sm text-red-500">{errors.institute}</p>
+            )}
           </div>
 
           {/* Location */}
@@ -133,8 +158,10 @@ export function CreateEducationModal() {
               onChange={(e) =>
                 setFormData({ ...formData, startDate: e.target.value })
               }
-              required
             />
+            {errors.startDate && (
+              <p className="text-sm text-red-500">{errors.startDate}</p>
+            )}
           </div>
 
           {/* End Date & Is Current */}
@@ -144,7 +171,7 @@ export function CreateEducationModal() {
               <Input
                 id="endDate"
                 type="date"
-                value={formData.endDate}
+                value={formData.endDate || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, endDate: e.target.value })
                 }
@@ -209,6 +236,7 @@ export function CreateEducationModal() {
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 setOpen(false)
                 resetForm()
@@ -216,7 +244,10 @@ export function CreateEducationModal() {
             >
               Cancel
             </Button>
-            <Button type="submit">Add Education</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Add Education
+            </Button>
           </div>
         </form>
       </DialogContent>

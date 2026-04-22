@@ -7,46 +7,18 @@ import { EditCertificateModal } from "../components/EditCertificateModal"
 import { CertificateCard } from "../components/CertificateCard"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
-
-type CertificateFormData = {
-  name: string
-  image: {
-    url: string
-    public_id: string
-  }
-}
+import { useCertificates, useDeleteCertificate } from "../hooks/useCertificates"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function CertificatePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedCertificate, setSelectedCertificate] =
-    useState<CertificateFormData | null>(null)
+  const [selectedCertificate, setSelectedCertificate] = useState<any | null>(null)
+  
+  const { data: certificates = [], isLoading } = useCertificates()
+  const { mutate: deleteCertificate } = useDeleteCertificate()
 
   // Sample certificates data
-  const certificates = [
-    {
-      name: "AWS Certified Solutions Architect",
-      image: {
-        url: "https://via.placeholder.com/300x200",
-        public_id: "",
-      },
-    },
-    {
-      name: "Google Cloud Associate Cloud Engineer",
-      image: {
-        url: "https://via.placeholder.com/300x200",
-        public_id: "",
-      },
-    },
-    {
-      name: "Microsoft Azure Developer Associate",
-      image: {
-        url: "https://via.placeholder.com/300x200",
-        public_id: "",
-      },
-    },
-  ]
-
   const handleReset = () => {
     setSearchTerm("")
   }
@@ -60,8 +32,10 @@ export default function CertificatePage() {
     setEditOpen(true)
   }
 
-  const handleDelete = (certName: string) => {
-    console.log("Delete certificate:", certName)
+  const handleDelete = (certId: string) => {
+    if (confirm("Are you sure you want to delete this certificate?")) {
+      deleteCertificate(certId)
+    }
   }
 
   return (
@@ -80,7 +54,13 @@ export default function CertificatePage() {
       </div>
 
       {/* Certificates Grid */}
-      {filteredCertificates.length > 0 ? (
+      {isLoading ? (
+        <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : filteredCertificates.length > 0 ? (
         <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredCertificates.map((certificate, index) => (
             <CertificateCard

@@ -7,6 +7,8 @@ import { EditSkillModal } from "../components/EditSkillModal"
 import { SkillCard } from "../components/SkillCard"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
+import { useSkills, useDeleteSkill } from "../hooks/useSkills"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type SkillFormData = {
   name: string
@@ -18,49 +20,10 @@ type SkillFormData = {
 export default function SkillsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedSkill, setSelectedSkill] = useState<SkillFormData | null>(null)
+  const [selectedSkill, setSelectedSkill] = useState<any | null>(null)
 
-  // Sample skills data
-  const skills = [
-    {
-      name: "React",
-      description:
-        "A JavaScript library for building user interfaces with reusable components",
-      technologies: ["JavaScript", "JSX", "Hooks"],
-      icon: "code",
-    },
-    {
-      name: "TypeScript",
-      description:
-        "Typed superset of JavaScript for building robust applications",
-      technologies: ["JavaScript", "Type System"],
-      icon: "code",
-    },
-    {
-      name: "Node.js",
-      description: "JavaScript runtime for building server-side applications",
-      technologies: ["JavaScript", "Express", "REST API"],
-      icon: "server",
-    },
-    {
-      name: "MongoDB",
-      description: "NoSQL database for flexible data storage",
-      technologies: ["NoSQL", "Database", "JSON"],
-      icon: "database",
-    },
-    {
-      name: "UI/UX Design",
-      description: "Creating beautiful and intuitive user interfaces",
-      technologies: ["Figma", "Tailwind CSS", "Design Systems"],
-      icon: "palette",
-    },
-    {
-      name: "Next.js",
-      description: "React framework for production applications",
-      technologies: ["React", "SSR", "API Routes"],
-      icon: "zap",
-    },
-  ]
+  const { data: skills = [], isLoading } = useSkills()
+  const { mutate: deleteSkill } = useDeleteSkill()
 
   const handleReset = () => {
     setSearchTerm("")
@@ -77,18 +40,14 @@ export default function SkillsPage() {
   )
 
   const handleEdit = (skill: any) => {
-    setSelectedSkill({
-      name: skill.name,
-      description: skill.description,
-      icon: skill.icon,
-      technologies: skill.technologies.join(","),
-    })
+    setSelectedSkill(skill)
     setEditOpen(true)
   }
 
-  const handleDelete = (skillName: string) => {
-    console.log("Delete skill:", skillName)
-    // TODO: Implement delete functionality
+  const handleDelete = (skillId: string) => {
+    if (confirm("Are you sure you want to delete this skill?")) {
+      deleteSkill(skillId)
+    }
   }
 
   return (
@@ -100,14 +59,17 @@ export default function SkillsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Button variant="outline" onClick={handleReset} className="gap-2">
-          <RotateCcw />
-        </Button>
         <CreateSkillModal />
       </div>
 
       {/* Skills Grid */}
-      {filteredSkills.length > 0 ? (
+      {isLoading ? (
+        <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : filteredSkills.length > 0 ? (
         <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredSkills.map((skill, index) => (
             <SkillCard

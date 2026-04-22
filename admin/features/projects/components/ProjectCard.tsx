@@ -23,7 +23,8 @@ type ProjectCardProps = {
     featured?: boolean
     liveUrl?: string
     githubUrl?: string
-    image?: string
+    image?: { url: string; public_id: string }
+    _id?: string
   }
   onEdit?: (project: any) => void
   onDelete?: (projectId: string) => void
@@ -42,7 +43,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           onMouseLeave={() => setIsHovered(false)}
         >
           <img
-            src={project.image}
+            src={project.image.url}
             alt={project.title || "Project image"}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -150,7 +151,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDelete(project.title || "project")}
+                onClick={() => onDelete(project._id || project.title || "")}
               >
                 <Trash />
                 Delete

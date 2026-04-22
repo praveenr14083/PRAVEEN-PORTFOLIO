@@ -10,12 +10,16 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Upload, X, FileText, CheckCircle2 } from "lucide-react"
+import { Upload, X, FileText, CheckCircle2, Loader2 } from "lucide-react"
+import { useUpdateResume } from "../hooks/useResume"
+import { toast } from "sonner"
 
 export function ReplaceResumeModal() {
   const [open, setOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const { mutate: updateResume, isPending } = useUpdateResume()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -34,11 +38,18 @@ export function ReplaceResumeModal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock submit
-    console.log("Uploading file:", selectedFile)
-    setOpen(false)
-    setSelectedFile(null)
-    setPreviewUrl(null)
+    if (!selectedFile) return
+
+    const formData = new FormData()
+    formData.append("file", selectedFile)
+
+    updateResume(formData, {
+      onSuccess: () => {
+        setOpen(false)
+        setSelectedFile(null)
+        setPreviewUrl(null)
+      },
+    })
   }
 
   return (
@@ -119,9 +130,10 @@ export function ReplaceResumeModal() {
           <div className="flex flex-col gap-3">
             <Button 
               type="submit" 
-              disabled={!selectedFile}
+              disabled={!selectedFile || isPending}
               className="w-full h-11 font-bold shadow-lg shadow-primary/20"
             >
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Upload & Publish
             </Button>
             <Button 

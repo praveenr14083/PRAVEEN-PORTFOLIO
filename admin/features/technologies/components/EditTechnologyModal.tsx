@@ -17,21 +17,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { X, Upload } from "lucide-react"
+import { X, Upload, Loader2 } from "lucide-react"
+import { useUpdateTechnology } from "../hooks/useTechnologies"
+import { technologySchema, TechnologyInput } from "../validation/technology.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type TechnologyFormData = {
   name: string
   category: "frontend" | "backend" | "database" | "tools"
-  icon: {
-    url: string
-    public_id: string
-  }
 }
 
 type EditTechnologyModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  technology?: TechnologyFormData | null
+  technology?: (TechnologyFormData & { _id: string, icon?: { url: string; public_id: string } }) | any | null
 }
 
 export function EditTechnologyModal({
@@ -42,43 +42,91 @@ export function EditTechnologyModal({
   const [formData, setFormData] = useState<TechnologyFormData>({
     name: "",
     category: "frontend",
-    icon: {
-      url: "",
-      public_id: "",
-    },
   })
+
+  const [iconFile, setIconFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: updateTechnologyDetails, isPending } = useUpdateTechnology()
 
   const categories = ["frontend", "backend", "database", "tools"]
 
   useEffect(() => {
     if (technology) {
-      setFormData(technology)
+      setFormData({
+        name: technology.name || "",
+        category: technology.category || "frontend",
+      })
+      if (technology.icon?.url) {
+        setPreviewUrl(technology.icon.url)
+      } else {
+        setPreviewUrl("")
+      }
+      setIconFile(null)
+      setErrors({})
     }
   }, [technology])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setFormData((prev) => ({
-        ...prev,
-        icon: {
-          url: previewUrl,
-          public_id: "",
-        },
-      }))
+      setIconFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
     }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Updated Technology:", formData)
-    onOpenChange(false)
+    if (!technology?._id) return
+
+    setErrors({})
+    try {
+      technologySchema.parse(formData)
+
+      const submitData = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, String(value))
+      })
+      if (iconFile) {
+        submitData.append("icon", iconFile)
+      }
+
+      updateTechnologyDetails(
+        { id: technology._id, formData: submitData },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
+        }
+      )
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     if (technology) {
-      setFormData(technology)
+      setFormData({
+        name: technology.name || "",
+        category: technology.category || "frontend",
+      })
+      if (technology.icon?.url) {
+        setPreviewUrl(technology.icon.url)
+      } else {
+        setPreviewUrl("")
+      }
+      setIconFile(null)
+      setErrors({})
     }
   }
 
@@ -100,8 +148,10 @@ export function EditTechnologyModal({
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="e.g., React, Node.js, PostgreSQL"
-              required
             />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name}</p>
+            )}
           </div>
 
           {/* Category */}
@@ -143,10 +193,10 @@ export function EditTechnologyModal({
                 className="hidden"
               />
 
-              {formData.icon.url ? (
+              {previewUrl ? (
                 <div className="relative w-full">
                   <img
-                    src={formData.icon.url}
+                    src={previewUrl}
                     alt="Preview"
                     className="h-32 w-full rounded-lg object-cover"
                   />
@@ -154,10 +204,8 @@ export function EditTechnologyModal({
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      setFormData((prev) => ({
-                        ...prev,
-                        icon: { url: "", public_id: "" },
-                      }))
+                      setIconFile(null)
+                      setPreviewUrl("")
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
@@ -182,6 +230,7 @@ export function EditTechnologyModal({
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false)
                 resetForm()
@@ -189,7 +238,10 @@ export function EditTechnologyModal({
             >
               Cancel
             </Button>
-            <Button type="submit">Update Technology</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Technology
+            </Button>
           </div>
         </form>
       </DialogContent>

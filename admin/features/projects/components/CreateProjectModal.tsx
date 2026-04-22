@@ -20,26 +20,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus, X, Upload } from "lucide-react"
-
-type ProjectFormData = {
-  title: string
-  description: string
-  technologies: string
-  category: string
-  status: "draft" | "published"
-  featured: boolean
-  liveUrl: string
-  githubUrl: string
-  image: {
-    url: string
-    public_id: string
-  }
-}
+import { Plus, X, Upload, Loader2 } from "lucide-react"
+import { useCreateProject } from "../hooks/useProjects"
+import { projectSchema, ProjectInput } from "../validation/project.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 export function CreateProjectModal() {
   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState<ProjectFormData>({
+  const [formData, setFormData] = useState<ProjectInput>({
     title: "",
     description: "",
     technologies: "",
@@ -48,11 +37,13 @@ export function CreateProjectModal() {
     featured: false,
     liveUrl: "",
     githubUrl: "",
-    image: {
-      url: "",
-      public_id: "",
-    },
   })
+
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: createProject, isPending } = useCreateProject()
 
   const categories = [
     "Web Development",
@@ -66,23 +57,43 @@ export function CreateProjectModal() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Just for UI preview - create local URL
-      const previewUrl = URL.createObjectURL(file)
-      setFormData((prev) => ({
-        ...prev,
-        image: {
-          url: previewUrl,
-          public_id: "",
-        },
-      }))
+      setImageFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
     }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form Data:", formData)
-    setOpen(false)
-    resetForm()
+    setErrors({})
+    try {
+      projectSchema.parse(formData)
+      
+      const submitData = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, String(value))
+      })
+      if (imageFile) {
+        submitData.append("image", imageFile)
+      }
+      
+      createProject(submitData, {
+        onSuccess: () => {
+          setOpen(false)
+          resetForm()
+        }
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach(e => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
@@ -95,11 +106,10 @@ export function CreateProjectModal() {
       featured: false,
       liveUrl: "",
       githubUrl: "",
-      image: {
-        url: "",
-        public_id: "",
-      },
     })
+    setImageFile(null)
+    setPreviewUrl("")
+    setErrors({})
   }
 
   return (
@@ -127,6 +137,7 @@ export function CreateProjectModal() {
               }
               placeholder="Enter project title"
             />
+            {errors.title && <span className="text-sm text-red-500">{errors.title}</span>}
           </div>
 
           {/* Description */}
@@ -141,6 +152,7 @@ export function CreateProjectModal() {
               placeholder="Enter project description"
               rows={4}
             />
+            {errors.description && <span className="text-sm text-red-500">{errors.description}</span>}
           </div>
 
           {/* Category */}
@@ -176,6 +188,7 @@ export function CreateProjectModal() {
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />
+            {errors.technologies && <span className="text-sm text-red-500">{errors.technologies}</span>}
           </div>
 
           {/* Live URL */}
@@ -223,11 +236,11 @@ export function CreateProjectModal() {
                 className="hidden"
               />
 
-              {formData.image.url ? (
+              {previewUrl ? (
                 // Preview mode
                 <div className="relative w-full">
                   <img
-                    src={formData.image.url}
+                    src={previewUrl}
                     alt="Preview"
                     className="h-48 w-full rounded-lg object-cover"
                   />
@@ -235,10 +248,8 @@ export function CreateProjectModal() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      setFormData((prev) => ({
-                        ...prev,
-                        image: { url: "", public_id: "" },
-                      }))
+                      setImageFile(null)
+                      setPreviewUrl("")
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
@@ -300,6 +311,7 @@ export function CreateProjectModal() {
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 setOpen(false)
                 resetForm()
@@ -307,7 +319,10 @@ export function CreateProjectModal() {
             >
               Cancel
             </Button>
-            <Button type="submit">Create Project</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Create Project
+            </Button>
           </div>
         </form>
       </DialogContent>

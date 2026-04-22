@@ -18,22 +18,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { Loader2 } from "lucide-react"
+import { useUpdateEducation } from "../hooks/useEducation"
+import { educationSchema, EducationInput } from "../validation/education.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
-type EducationFormData = {
-  degree: string
-  institute: string
-  location: string
-  startDate: string
-  endDate: string
-  isCurrent: boolean
-  grade: string
-  gradeType: "CGPA" | "Percentage" | "GPA"
-}
+
 
 type EditEducationModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  education?: EducationFormData | null
+  education?: (EducationInput & { _id: string }) | any | null
 }
 
 export function EditEducationModal({
@@ -41,7 +37,7 @@ export function EditEducationModal({
   onOpenChange,
   education,
 }: EditEducationModalProps) {
-  const [formData, setFormData] = useState<EducationFormData>({
+  const [formData, setFormData] = useState<EducationInput>({
     degree: "",
     institute: "",
     location: "",
@@ -51,24 +47,79 @@ export function EditEducationModal({
     grade: "",
     gradeType: "CGPA",
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const gradeTypes = ["CGPA", "Percentage", "GPA"]
+  const { mutate: updateEducationDetails, isPending } = useUpdateEducation()
+
+  const formatDateForInput = (dateString: string | undefined | null) => {
+    if (!dateString) return ""
+    return dateString.split("T")[0]
+  }
 
   useEffect(() => {
     if (education) {
-      setFormData(education)
+      setFormData({
+        degree: education.degree || "",
+        institute: education.institute || "",
+        location: education.location || "",
+        startDate: formatDateForInput(education.startDate),
+        endDate: formatDateForInput(education.endDate),
+        isCurrent: education.isCurrent || false,
+        grade: education.grade || "",
+        gradeType: (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
+      })
+      setErrors({})
     }
   }, [education])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Updated Education:", formData)
-    onOpenChange(false)
+    if (!education?._id) return
+
+    setErrors({})
+    try {
+      const dataToParse = {
+        ...formData,
+        endDate: formData.isCurrent ? null : (formData.endDate || null),
+      }
+      educationSchema.parse(dataToParse)
+
+      updateEducationDetails(
+        { id: education._id, educationData: dataToParse },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
+        }
+      )
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     if (education) {
-      setFormData(education)
+      setFormData({
+        degree: education.degree || "",
+        institute: education.institute || "",
+        location: education.location || "",
+        startDate: formatDateForInput(education.startDate),
+        endDate: formatDateForInput(education.endDate),
+        isCurrent: education.isCurrent || false,
+        grade: education.grade || "",
+        gradeType: (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
+      })
+      setErrors({})
     }
   }
 
@@ -90,8 +141,10 @@ export function EditEducationModal({
                 setFormData({ ...formData, degree: e.target.value })
               }
               placeholder="e.g., Bachelor of Science in Computer Science"
-              required
             />
+            {errors.degree && (
+              <p className="text-sm text-red-500">{errors.degree}</p>
+            )}
           </div>
 
           {/* Institute */}
@@ -104,8 +157,10 @@ export function EditEducationModal({
                 setFormData({ ...formData, institute: e.target.value })
               }
               placeholder="e.g., XYZ University"
-              required
             />
+            {errors.institute && (
+              <p className="text-sm text-red-500">{errors.institute}</p>
+            )}
           </div>
 
           {/* Location */}
@@ -131,8 +186,10 @@ export function EditEducationModal({
               onChange={(e) =>
                 setFormData({ ...formData, startDate: e.target.value })
               }
-              required
             />
+            {errors.startDate && (
+              <p className="text-sm text-red-500">{errors.startDate}</p>
+            )}
           </div>
 
           {/* End Date & Is Current */}
@@ -142,7 +199,7 @@ export function EditEducationModal({
               <Input
                 id="edit-endDate"
                 type="date"
-                value={formData.endDate}
+                value={formData.endDate || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, endDate: e.target.value })
                 }
@@ -207,6 +264,7 @@ export function EditEducationModal({
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false)
                 resetForm()
@@ -214,7 +272,10 @@ export function EditEducationModal({
             >
               Cancel
             </Button>
-            <Button type="submit">Update Education</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Education
+            </Button>
           </div>
         </form>
       </DialogContent>

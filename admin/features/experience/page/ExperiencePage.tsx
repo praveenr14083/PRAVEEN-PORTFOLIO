@@ -7,6 +7,8 @@ import { EditExperienceModal } from "../components/EditExperienceModal"
 import { ExperienceCard } from "../components/ExperienceCard"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
+import { useExperience, useDeleteExperience } from "../hooks/useExperience"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type ExperienceFormData = {
   role: string
@@ -22,45 +24,10 @@ type ExperienceFormData = {
 export default function ExperiencePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedExperience, setSelectedExperience] =
-    useState<ExperienceFormData | null>(null)
+  const [selectedExperience, setSelectedExperience] = useState<any | null>(null)
 
-  // Sample experience data
-  const experiences = [
-    {
-      role: "Senior Full Stack Developer",
-      company: "Tech Company Inc.",
-      location: "New York, USA",
-      employmentType: "Full-Time",
-      description:
-        "Led development of microservices architecture and mentored junior developers",
-      startDate: "2022-01-15",
-      endDate: "",
-      isCurrent: true,
-    },
-    {
-      role: "Frontend Developer",
-      company: "Digital Solutions Ltd.",
-      location: "Remote",
-      employmentType: "Full-Time",
-      description:
-        "Developed responsive web applications using React and Next.js",
-      startDate: "2020-06-01",
-      endDate: "2021-12-31",
-      isCurrent: false,
-    },
-    {
-      role: "Intern - Web Developer",
-      company: "Startup Hub",
-      location: "California, USA",
-      employmentType: "Internship",
-      description:
-        "Built and maintained web applications during summer internship",
-      startDate: "2019-06-01",
-      endDate: "2019-08-31",
-      isCurrent: false,
-    },
-  ]
+  const { data: experiences = [], isLoading } = useExperience()
+  const { mutate: deleteExperience } = useDeleteExperience()
 
   const handleReset = () => {
     setSearchTerm("")
@@ -77,8 +44,10 @@ export default function ExperiencePage() {
     setEditOpen(true)
   }
 
-  const handleDelete = (role: string) => {
-    console.log("Delete experience:", role)
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this experience record?")) {
+      deleteExperience(id)
+    }
   }
 
   return (
@@ -97,7 +66,13 @@ export default function ExperiencePage() {
       </div>
 
       {/* Experience List */}
-      {filteredExperience.length > 0 ? (
+      {isLoading ? (
+        <div className="mt-4 space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full rounded-lg" />
+          ))}
+        </div>
+      ) : filteredExperience.length > 0 ? (
         <div className="mt-4 space-y-4">
           {filteredExperience.map((experience, index) => (
             <ExperienceCard

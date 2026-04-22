@@ -1,11 +1,5 @@
-import React from "react"
+import { redirect } from "next/navigation"
 
 export default function page() {
-  return (
-    <div>
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reprehenderit
-      veniam quae, excepturi dicta est placeat dolorem quibusdam unde dolores
-      fugiat ipsum numquam aspernatur ut molestias cumque laudantium! Expedita,
-    </div>
-  )
+  redirect("/dashboard")
 }

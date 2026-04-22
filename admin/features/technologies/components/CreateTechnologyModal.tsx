@@ -18,15 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Plus, X, Upload } from "lucide-react"
+import { Plus, X, Upload, Loader2 } from "lucide-react"
+import { useCreateTechnology } from "../hooks/useTechnologies"
+import { technologySchema, TechnologyInput } from "../validation/technology.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type TechnologyFormData = {
   name: string
   category: "frontend" | "backend" | "database" | "tools"
-  icon: {
-    url: string
-    public_id: string
-  }
 }
 
 export function CreateTechnologyModal() {
@@ -34,44 +34,68 @@ export function CreateTechnologyModal() {
   const [formData, setFormData] = useState<TechnologyFormData>({
     name: "",
     category: "frontend",
-    icon: {
-      url: "",
-      public_id: "",
-    },
   })
+
+  const [iconFile, setIconFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: createTechnology, isPending } = useCreateTechnology()
 
   const categories = ["frontend", "backend", "database", "tools"]
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const previewUrl = URL.createObjectURL(file)
-      setFormData((prev) => ({
-        ...prev,
-        icon: {
-          url: previewUrl,
-          public_id: "",
-        },
-      }))
+      setIconFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
     }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Technology Data:", formData)
-    setOpen(false)
-    resetForm()
+    setErrors({})
+    try {
+      technologySchema.parse(formData)
+      if (!iconFile) {
+        toast.error("Please upload an icon")
+        return
+      }
+
+      const submitData = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, String(value))
+      })
+      submitData.append("icon", iconFile)
+
+      createTechnology(submitData, {
+        onSuccess: () => {
+          setOpen(false)
+          resetForm()
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     setFormData({
       name: "",
       category: "frontend",
-      icon: {
-        url: "",
-        public_id: "",
-      },
     })
+    setIconFile(null)
+    setPreviewUrl("")
+    setErrors({})
   }
 
   return (
@@ -98,8 +122,10 @@ export function CreateTechnologyModal() {
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="e.g., React, Node.js, PostgreSQL"
-              required
             />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name}</p>
+            )}
           </div>
 
           {/* Category */}
@@ -141,10 +167,10 @@ export function CreateTechnologyModal() {
                 className="hidden"
               />
 
-              {formData.icon.url ? (
+              {previewUrl ? (
                 <div className="relative w-full">
                   <img
-                    src={formData.icon.url}
+                    src={previewUrl}
                     alt="Preview"
                     className="h-32 w-full rounded-lg object-cover"
                   />
@@ -152,10 +178,8 @@ export function CreateTechnologyModal() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      setFormData((prev) => ({
-                        ...prev,
-                        icon: { url: "", public_id: "" },
-                      }))
+                      setIconFile(null)
+                      setPreviewUrl("")
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
@@ -180,6 +204,7 @@ export function CreateTechnologyModal() {
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 setOpen(false)
                 resetForm()
@@ -187,7 +212,10 @@ export function CreateTechnologyModal() {
             >
               Cancel
             </Button>
-            <Button type="submit">Add Technology</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Add Technology
+            </Button>
           </div>
         </form>
       </DialogContent>

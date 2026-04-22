@@ -38,12 +38,14 @@ import {
 } from "lucide-react"
 
 type Project = {
+  _id: string
   title: string
   category: string
   status?: string
   featured?: boolean
   technologies: string[]
-  image?: string
+  description?: string
+  image?: { url: string; public_id: string }
 }
 
 type Props = {
@@ -68,9 +70,9 @@ export function ProjectTable({ data }: Props) {
         const project = row.original
         return (
           <div className="flex items-center gap-3">
-            {project.image ? (
+            {project.image?.url ? (
               <img
-                src={project.image}
+                src={project.image.url}
                 alt={project.title}
                 className="h-10 w-10 rounded-md object-cover"
               />
@@ -170,6 +172,8 @@ export function ProjectTable({ data }: Props) {
       const matchesTechnologies = item.technologies.some((tech) =>
         tech.toLowerCase().includes(searchLower)
       )
+      const matchesDescription =
+        item.description?.toLowerCase().includes(searchLower) || false
 
       // Return true if any field matches
       return (
@@ -177,7 +181,8 @@ export function ProjectTable({ data }: Props) {
         matchesCategory ||
         matchesStatus ||
         matchesFeatured ||
-        matchesTechnologies
+        matchesTechnologies ||
+        matchesDescription
       )
     })
   }, [data, search])

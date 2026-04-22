@@ -19,6 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { Loader2 } from "lucide-react"
+import { useUpdateExperience } from "../hooks/useExperience"
+import { experienceSchema, ExperienceInput } from "../validation/experience.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type ExperienceFormData = {
   role: string
@@ -39,7 +44,7 @@ type ExperienceFormData = {
 type EditExperienceModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  experience?: ExperienceFormData | null
+  experience?: (ExperienceInput & { _id: string }) | any | null
 }
 
 export function EditExperienceModal({
@@ -47,7 +52,7 @@ export function EditExperienceModal({
   onOpenChange,
   experience,
 }: EditExperienceModalProps) {
-  const [formData, setFormData] = useState<ExperienceFormData>({
+  const [formData, setFormData] = useState<ExperienceInput>({
     role: "",
     company: "",
     location: "",
@@ -57,6 +62,9 @@ export function EditExperienceModal({
     endDate: "",
     isCurrent: false,
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: updateExperienceDetails, isPending } = useUpdateExperience()
 
   const employmentTypes = [
     "Full-Time",
@@ -66,21 +74,74 @@ export function EditExperienceModal({
     "Freelance",
   ]
 
+  const formatDateForInput = (dateString: string | undefined | null) => {
+    if (!dateString) return ""
+    return dateString.split("T")[0]
+  }
+
   useEffect(() => {
     if (experience) {
-      setFormData(experience)
+      setFormData({
+        role: experience.role || "",
+        company: experience.company || "",
+        location: experience.location || "",
+        employmentType: (experience.employmentType as any) || "Full-Time",
+        description: experience.description || "",
+        startDate: formatDateForInput(experience.startDate),
+        endDate: formatDateForInput(experience.endDate),
+        isCurrent: experience.isCurrent || false,
+      })
+      setErrors({})
     }
   }, [experience])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Updated Experience:", formData)
-    onOpenChange(false)
+    if (!experience?._id) return
+
+    setErrors({})
+    try {
+      const dataToParse = {
+        ...formData,
+        endDate: formData.isCurrent ? null : (formData.endDate || null),
+      }
+      experienceSchema.parse(dataToParse)
+
+      updateExperienceDetails(
+        { id: experience._id, experienceData: dataToParse },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
+        }
+      )
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
     if (experience) {
-      setFormData(experience)
+      setFormData({
+        role: experience.role || "",
+        company: experience.company || "",
+        location: experience.location || "",
+        employmentType: (experience.employmentType as any) || "Full-Time",
+        description: experience.description || "",
+        startDate: formatDateForInput(experience.startDate),
+        endDate: formatDateForInput(experience.endDate),
+        isCurrent: experience.isCurrent || false,
+      })
+      setErrors({})
     }
   }
 
@@ -102,8 +163,10 @@ export function EditExperienceModal({
                 setFormData({ ...formData, role: e.target.value })
               }
               placeholder="e.g., Senior Software Engineer"
-              required
             />
+            {errors.role && (
+              <p className="text-sm text-red-500">{errors.role}</p>
+            )}
           </div>
 
           {/* Company */}
@@ -116,8 +179,10 @@ export function EditExperienceModal({
                 setFormData({ ...formData, company: e.target.value })
               }
               placeholder="e.g., Tech Company Inc."
-              required
             />
+            {errors.company && (
+              <p className="text-sm text-red-500">{errors.company}</p>
+            )}
           </div>
 
           {/* Location */}
@@ -165,8 +230,10 @@ export function EditExperienceModal({
               onChange={(e) =>
                 setFormData({ ...formData, startDate: e.target.value })
               }
-              required
             />
+            {errors.startDate && (
+              <p className="text-sm text-red-500">{errors.startDate}</p>
+            )}
           </div>
 
           {/* End Date & Is Current */}
@@ -176,7 +243,7 @@ export function EditExperienceModal({
               <Input
                 id="edit-endDate"
                 type="date"
-                value={formData.endDate}
+                value={formData.endDate || ""}
                 onChange={(e) =>
                   setFormData({ ...formData, endDate: e.target.value })
                 }
@@ -218,6 +285,7 @@ export function EditExperienceModal({
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 onOpenChange(false)
                 resetForm()
@@ -225,7 +293,10 @@ export function EditExperienceModal({
             >
               Cancel
             </Button>
-            <Button type="submit">Update Experience</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Experience
+            </Button>
           </div>
         </form>
       </DialogContent>

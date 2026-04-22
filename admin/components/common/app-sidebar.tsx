@@ -27,6 +27,7 @@ import {
   LogOut,
   ShieldCheck,
 } from "lucide-react"
+import { useLogout } from "@/features/auth/hooks/useAuth"
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -46,9 +47,10 @@ export function AppSidebar() {
 
   const isCollapsed = state === "collapsed"
 
+  const { mutate: logout } = useLogout()
+
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    router.push("/login")
+    logout()
   }
 
   return (

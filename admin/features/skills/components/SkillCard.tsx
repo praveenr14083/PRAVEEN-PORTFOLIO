@@ -16,6 +16,7 @@ import { DynamicIcon } from "lucide-react/dynamic"
 
 type SkillCardProps = {
   skill: {
+    _id?: string
     name?: string
     description?: string
     technologies?: string[]
@@ -88,7 +89,7 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDelete(skill.name || "skill")}
+                onClick={() => onDelete(skill._id || "")}
                 className="gap-1"
               >
                 <Trash className="h-4 w-4" />

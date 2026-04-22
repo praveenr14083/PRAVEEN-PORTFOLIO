@@ -8,6 +8,7 @@ import { Pen, Trash } from "lucide-react"
 
 type TechnologyCardProps = {
   technology: {
+    _id?: string
     name?: string
     category?: string
     icon?: {
@@ -69,7 +70,7 @@ export function TechnologyCard({
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onDelete(technology.name || "technology")}
+                onClick={() => onDelete(technology._id || "")}
                 className="gap-1"
               >
                 <Trash className="h-4 w-4" />

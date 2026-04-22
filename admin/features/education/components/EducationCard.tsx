@@ -15,11 +15,12 @@ import { Pen, Trash, Calendar } from "lucide-react"
 
 type EducationCardProps = {
   education: {
+    _id?: string
     degree?: string
     institute?: string
     location?: string
     startDate?: string
-    endDate?: string
+    endDate?: string | null
     isCurrent?: boolean
     grade?: string
     gradeType?: string
@@ -33,9 +34,10 @@ export function EducationCard({
   onEdit,
   onDelete,
 }: EducationCardProps) {
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | undefined | null) => {
     if (!dateString) return ""
     const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ""
     return date.toLocaleDateString("en-US", { year: "numeric", month: "short" })
   }
 
@@ -98,7 +100,7 @@ export function EducationCard({
           <Button
             size="sm"
             variant="destructive"
-            onClick={() => onDelete(education.degree || "education")}
+            onClick={() => onDelete(education._id || "")}
             className="gap-1"
           >
             <Trash className="h-4 w-4" />

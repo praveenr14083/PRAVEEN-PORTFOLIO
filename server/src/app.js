@@ -9,8 +9,10 @@ import certificateRoutes from "./routes/certificate.routes.js";
 import resumeRoutes from "./routes/resume.routes.js";
 import educationRoutes from "./routes/education.routes.js";
 import experienceRoutes from "./routes/experience.routes.js";
+import statsRoutes from "./routes/stats.routes.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
+import { verifyAdmin } from "./middleware/auth.middleware.js";
 
 const app = express();
 
@@ -23,7 +25,11 @@ app.get("/", (req, res) => {
   res.json({ success: true, message: "API running 🚀" });
 });
 
+// protect all API routes (except maybe login if there was one, but Firebase handles login client-side)
+app.use("/api", verifyAdmin);
+
 // routes
+app.use("/api/stats", statsRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/technologies", technologyRoutes);
 app.use("/api/skills", skillRoutes);

@@ -20,7 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus } from "lucide-react"
+import { Plus, Loader2 } from "lucide-react"
+import { useCreateExperience } from "../hooks/useExperience"
+import { experienceSchema, ExperienceInput } from "../validation/experience.validation"
+import { ZodError } from "zod"
+import { toast } from "sonner"
 
 type ExperienceFormData = {
   role: string
@@ -40,7 +44,7 @@ type ExperienceFormData = {
 
 export function CreateExperienceModal() {
   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState<ExperienceFormData>({
+  const [formData, setFormData] = useState<ExperienceInput>({
     role: "",
     company: "",
     location: "",
@@ -50,6 +54,9 @@ export function CreateExperienceModal() {
     endDate: "",
     isCurrent: false,
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const { mutate: createExperience, isPending } = useCreateExperience()
 
   const employmentTypes = [
     "Full-Time",
@@ -61,9 +68,32 @@ export function CreateExperienceModal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Experience Data:", formData)
-    setOpen(false)
-    resetForm()
+    setErrors({})
+    try {
+      const dataToParse = {
+        ...formData,
+        endDate: formData.isCurrent ? null : (formData.endDate || null)
+      }
+      experienceSchema.parse(dataToParse)
+
+      createExperience(dataToParse, {
+        onSuccess: () => {
+          setOpen(false)
+          resetForm()
+        },
+      })
+    } catch (err) {
+      if (err instanceof ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        err.issues.forEach((e) => {
+          if (e.path[0]) {
+            fieldErrors[e.path[0].toString()] = e.message
+          }
+        })
+        setErrors(fieldErrors)
+        toast.error("Please fill in all required fields correctly")
+      }
+    }
   }
 
   const resetForm = () => {
@@ -77,6 +107,7 @@ export function CreateExperienceModal() {
       endDate: "",
       isCurrent: false,
     })
+    setErrors({})
   }
 
   return (
@@ -103,8 +134,10 @@ export function CreateExperienceModal() {
                 setFormData({ ...formData, role: e.target.value })
               }
               placeholder="e.g., Senior Software Engineer"
-              required
             />
+            {errors.role && (
+              <p className="text-sm text-red-500">{errors.role}</p>
+            )}
           </div>
 
           {/* Company */}
@@ -117,8 +150,10 @@ export function CreateExperienceModal() {
                 setFormData({ ...formData, company: e.target.value })
               }
               placeholder="e.g., Tech Company Inc."
-              required
             />
+            {errors.company && (
+              <p className="text-sm text-red-500">{errors.company}</p>
+            )}
           </div>
 
           {/* Location */}
@@ -166,23 +201,25 @@ export function CreateExperienceModal() {
               onChange={(e) =>
                 setFormData({ ...formData, startDate: e.target.value })
               }
-              required
             />
+            {errors.startDate && (
+              <p className="text-sm text-red-500">{errors.startDate}</p>
+            )}
           </div>
 
           {/* End Date & Is Current */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="endDate">End Date</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={formData.endDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, endDate: e.target.value })
-                }
-                disabled={formData.isCurrent}
-              />
+                <Input
+                  id="endDate"
+                  type="date"
+                  value={formData.endDate || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, endDate: e.target.value })
+                  }
+                  disabled={formData.isCurrent}
+                />
             </div>
             <div className="flex items-end">
               <div className="flex items-center gap-2">
@@ -219,6 +256,7 @@ export function CreateExperienceModal() {
             <Button
               type="button"
               variant="outline"
+              disabled={isPending}
               onClick={() => {
                 setOpen(false)
                 resetForm()
@@ -226,7 +264,10 @@ export function CreateExperienceModal() {
             >
               Cancel
             </Button>
-            <Button type="submit">Add Experience</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Add Experience
+            </Button>
           </div>
         </form>
       </DialogContent>
