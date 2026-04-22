@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
 import { useSkills, useDeleteSkill } from "../hooks/useSkills"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 type SkillFormData = {
   name: string
@@ -21,6 +22,8 @@ export default function SkillsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedSkill, setSelectedSkill] = useState<any | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   const { data: skills = [], isLoading } = useSkills()
   const { mutate: deleteSkill } = useDeleteSkill()
@@ -45,8 +48,15 @@ export default function SkillsPage() {
   }
 
   const handleDelete = (skillId: string) => {
-    if (confirm("Are you sure you want to delete this skill?")) {
-      deleteSkill(skillId)
+    setDeleteId(skillId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deleteId) {
+      deleteSkill(deleteId)
+      setDeleteConfirmOpen(false)
+      setDeleteId(null)
     }
   }
 
@@ -96,6 +106,14 @@ export default function SkillsPage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         skill={selectedSkill}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Skill Category"
+        description="Are you sure you want to delete this skill category and all its technologies? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

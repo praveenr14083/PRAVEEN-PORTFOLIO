@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
 import { useEducation, useDeleteEducation } from "../hooks/useEducation"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 type EducationFormData = {
   degree: string
@@ -25,6 +26,8 @@ export default function EducationPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedEducation, setSelectedEducation] = useState<any | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   const { data: educationList = [], isLoading } = useEducation()
   const { mutate: deleteEducation } = useDeleteEducation()
@@ -45,8 +48,15 @@ export default function EducationPage() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this education record?")) {
-      deleteEducation(id)
+    setDeleteId(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deleteId) {
+      deleteEducation(deleteId)
+      setDeleteConfirmOpen(false)
+      setDeleteId(null)
     }
   }
 
@@ -99,6 +109,14 @@ export default function EducationPage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         education={selectedEducation}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Education"
+        description="Are you sure you want to delete this education record? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

@@ -6,15 +6,21 @@ import { Download, Eye, Trash2, Loader2 } from "lucide-react"
 import { ReplaceResumeModal } from "../components/ReplaceResumeModal"
 import { useResume, useDeleteResume } from "../hooks/useResume"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import React, { useState } from "react"
 
 export default function ResumePage() {
   const { data: resume, isLoading } = useResume()
   const { mutate: deleteResume, isPending: isDeleting } = useDeleteResume()
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   const handleDelete = () => {
-    if (resume?._id && confirm("Are you sure you want to delete the resume?")) {
-      deleteResume(resume._id)
-    }
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    deleteResume()
+    setDeleteConfirmOpen(false)
   }
 
   return (
@@ -32,16 +38,6 @@ export default function ResumePage() {
           Preview
         </Button>
 
-        {/* Download */}
-        <Button
-          variant="outline"
-          className="gap-2"
-          disabled={!resume}
-          onClick={() => resume && window.open(resume.file.url, "_blank")}
-        >
-          <Download className="h-4 w-4" />
-          Download
-        </Button>
 
         {/* Delete */}
         <Button
@@ -82,6 +78,15 @@ export default function ResumePage() {
           <p className="text-muted-foreground">No resume uploaded Yet.</p>
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Resume"
+        description="Are you sure you want to delete your resume? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        isLoading={isDeleting}
+      />
     </section>
   )
 }

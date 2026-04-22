@@ -15,6 +15,7 @@ import {
 import { RotateCcw, ChevronDown, RotateCw } from "lucide-react"
 import { useProjects, useDeleteProject } from "../hooks/useProjects"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 type ProjectFormData = {
   title: string
@@ -37,6 +38,8 @@ export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<any>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   const { data: projects = [], isLoading, refetch } = useProjects()
   const { mutate: deleteProject } = useDeleteProject()
@@ -73,8 +76,15 @@ export default function ProjectsPage() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this project?")) {
-      deleteProject(id)
+    setDeleteId(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deleteId) {
+      deleteProject(deleteId)
+      setDeleteConfirmOpen(false)
+      setDeleteId(null)
     }
   }
 
@@ -194,6 +204,14 @@ export default function ProjectsPage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         project={selectedProject}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Project"
+        description="Are you sure you want to delete this project? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

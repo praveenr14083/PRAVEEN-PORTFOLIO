@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
 import { useCertificates, useDeleteCertificate } from "../hooks/useCertificates"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 export default function CertificatePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedCertificate, setSelectedCertificate] = useState<any | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   
   const { data: certificates = [], isLoading } = useCertificates()
   const { mutate: deleteCertificate } = useDeleteCertificate()
@@ -33,8 +36,15 @@ export default function CertificatePage() {
   }
 
   const handleDelete = (certId: string) => {
-    if (confirm("Are you sure you want to delete this certificate?")) {
-      deleteCertificate(certId)
+    setDeleteId(certId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deleteId) {
+      deleteCertificate(deleteId)
+      setDeleteConfirmOpen(false)
+      setDeleteId(null)
     }
   }
 
@@ -87,6 +97,14 @@ export default function CertificatePage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         certificate={selectedCertificate}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Certificate"
+        description="Are you sure you want to delete this certificate? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

@@ -28,14 +28,17 @@ import {
 
 import { Button } from "@/components/ui/button"
 import {
+  MoreHorizontal,
+  ExternalLink,
+  Search,
   RotateCcw,
   Columns,
-  Eye,
   Edit,
   Trash2,
-  Search,
-  MoreHorizontal,
 } from "lucide-react"
+import { useDeleteProject } from "../../projects/hooks/useProjects"
+import { EditProjectModal } from "../../projects/components/EditProjectModal"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 type Project = {
   _id: string
@@ -45,6 +48,8 @@ type Project = {
   featured?: boolean
   technologies: string[]
   description?: string
+  liveUrl?: string
+  githubUrl?: string
   image?: { url: string; public_id: string }
 }
 
@@ -55,6 +60,16 @@ type Props = {
 export function ProjectTable({ data }: Props) {
   const [search, setSearch] = useState("")
   const [columnVisibility, setColumnVisibility] = useState({})
+  
+  // State for Edit
+  const [editOpen, setEditOpen] = useState(false)
+  const [selectedProject, setSelectedProject] = useState<any>(null)
+  
+  // State for Delete
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  
+  const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject()
 
   // ✅ Columns with S.No, Image+Title combined, and Actions in dropdown
   const columns: ColumnDef<Project>[] = [
@@ -124,25 +139,40 @@ export function ProjectTable({ data }: Props) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-muted transition-colors"
+              >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-40">
+              {project.liveUrl && (
+                <DropdownMenuItem
+                  onClick={() => window.open(project.liveUrl, "_blank")}
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Live Demo
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
-                onClick={() => console.log("View:", project.title)}
+                onClick={() => {
+                  setSelectedProject({
+                    ...project,
+                    technologies: project.technologies?.join(", ") || "",
+                  })
+                  setEditOpen(true)
+                }}
               >
-                <Eye className="mr-2 h-4 w-4" />
-                View
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => console.log("Edit:", project.title)}
-              >
-                <Edit className="mr-2 h-4 w-4" />
+                <Edit className="mr-2 h-4 w-4 text-blue-500" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => console.log("Delete:", project.title)}
+                onClick={() => {
+                  setDeleteId(project._id)
+                  setDeleteConfirmOpen(true)
+                }}
                 className="text-red-600 focus:text-red-600"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -313,6 +343,28 @@ export function ProjectTable({ data }: Props) {
           </TableBody>
         </Table>
       </div>
+
+      {/* Edit Modal */}
+      <EditProjectModal
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        project={selectedProject}
+      />
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Project"
+        description="Are you sure you want to delete this project? This action cannot be undone."
+        onConfirm={() => {
+          if (deleteId) {
+            deleteProject(deleteId)
+            setDeleteConfirmOpen(false)
+          }
+        }}
+        isLoading={isDeleting}
+      />
     </div>
   )
 }

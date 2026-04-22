@@ -23,6 +23,6 @@ export const updateResume = async (formData: FormData): Promise<Resume> => {
   return data.data;
 };
 
-export const deleteResume = async (id: string): Promise<void> => {
-  await api.delete(`/resume/${id}`);
+export const deleteResume = async (): Promise<void> => {
+  await api.delete("/resume");
 };

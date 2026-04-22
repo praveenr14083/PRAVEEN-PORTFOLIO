@@ -10,24 +10,26 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import { useLogout } from "@/features/auth/hooks/useAuth"
 import {
-  LayoutDashboard,
-  FolderKanban,
-  BrainCircuit,
-  Code,
-  GraduationCap,
-  Briefcase,
   Award,
+  BrainCircuit,
+  Briefcase,
+  Code,
   FileText,
+  FolderKanban,
+  GraduationCap,
+  LayoutDashboard,
   LogOut,
   ShieldCheck,
 } from "lucide-react"
-import { useLogout } from "@/features/auth/hooks/useAuth"
+import { useState } from "react"
+import { ConfirmDialog } from "./ConfirmDialog"
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
@@ -47,10 +49,16 @@ export function AppSidebar() {
 
   const isCollapsed = state === "collapsed"
 
-  const { mutate: logout } = useLogout()
+  const { mutate: logout, isPending: isLoggingOut } = useLogout()
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
 
   const handleLogout = () => {
+    setLogoutConfirmOpen(true)
+  }
+
+  const handleConfirmLogout = () => {
     logout()
+    setLogoutConfirmOpen(false)
   }
 
   return (
@@ -108,6 +116,15 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      <ConfirmDialog
+        open={logoutConfirmOpen}
+        onOpenChange={setLogoutConfirmOpen}
+        title="Logout Confirmation"
+        description="Are you sure you want to log out? You will need to sign in again to access the admin panel."
+        confirmText="Logout"
+        onConfirm={handleConfirmLogout}
+        isLoading={isLoggingOut}
+      />
     </Sidebar>
   )
 }

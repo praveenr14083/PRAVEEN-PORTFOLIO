@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
 import { useExperience, useDeleteExperience } from "../hooks/useExperience"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 
 type ExperienceFormData = {
   role: string
@@ -25,6 +26,8 @@ export default function ExperiencePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedExperience, setSelectedExperience] = useState<any | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
   const { data: experiences = [], isLoading } = useExperience()
   const { mutate: deleteExperience } = useDeleteExperience()
@@ -45,8 +48,15 @@ export default function ExperiencePage() {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this experience record?")) {
-      deleteExperience(id)
+    setDeleteId(id)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deleteId) {
+      deleteExperience(deleteId)
+      setDeleteConfirmOpen(false)
+      setDeleteId(null)
     }
   }
 
@@ -99,6 +109,14 @@ export default function ExperiencePage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         experience={selectedExperience}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Experience"
+        description="Are you sure you want to delete this experience record? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
       />
     </section>
   )

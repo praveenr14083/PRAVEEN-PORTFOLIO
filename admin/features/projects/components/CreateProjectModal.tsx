@@ -1,17 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -20,11 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus, X, Upload, Loader2 } from "lucide-react"
-import { useCreateProject } from "../hooks/useProjects"
-import { projectSchema, ProjectInput } from "../validation/project.validation"
-import { ZodError } from "zod"
+import { Textarea } from "@/components/ui/textarea"
+import { Loader2, Plus, Upload, X } from "lucide-react"
+import React, { useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useCreateProject } from "../hooks/useProjects"
+import { ProjectInput, projectSchema } from "../validation/project.validation"
 
 export function CreateProjectModal() {
   const [open, setOpen] = useState(false)
@@ -67,7 +68,7 @@ export function CreateProjectModal() {
     setErrors({})
     try {
       projectSchema.parse(formData)
-      
+
       const submitData = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, String(value))
@@ -75,17 +76,17 @@ export function CreateProjectModal() {
       if (imageFile) {
         submitData.append("image", imageFile)
       }
-      
+
       createProject(submitData, {
         onSuccess: () => {
           setOpen(false)
           resetForm()
-        }
+        },
       })
     } catch (err) {
       if (err instanceof ZodError) {
         const fieldErrors: Record<string, string> = {}
-        err.issues.forEach(e => {
+        err.issues.forEach((e) => {
           if (e.path[0]) {
             fieldErrors[e.path[0].toString()] = e.message
           }
@@ -123,6 +124,9 @@ export function CreateProjectModal() {
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-bold">Create New Project</DialogTitle>
+          <DialogDescription>
+            Fill in the details below to add a new project to your portfolio.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -137,7 +141,9 @@ export function CreateProjectModal() {
               }
               placeholder="Enter project title"
             />
-            {errors.title && <span className="text-sm text-red-500">{errors.title}</span>}
+            {errors.title && (
+              <span className="text-sm text-red-500">{errors.title}</span>
+            )}
           </div>
 
           {/* Description */}
@@ -152,7 +158,9 @@ export function CreateProjectModal() {
               placeholder="Enter project description"
               rows={4}
             />
-            {errors.description && <span className="text-sm text-red-500">{errors.description}</span>}
+            {errors.description && (
+              <span className="text-sm text-red-500">{errors.description}</span>
+            )}
           </div>
 
           {/* Category */}
@@ -188,7 +196,11 @@ export function CreateProjectModal() {
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />
-            {errors.technologies && <span className="text-sm text-red-500">{errors.technologies}</span>}
+            {errors.technologies && (
+              <span className="text-sm text-red-500">
+                {errors.technologies}
+              </span>
+            )}
           </div>
 
           {/* Live URL */}
