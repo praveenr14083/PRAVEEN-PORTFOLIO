@@ -1,5 +1,6 @@
 import React from "react"
+import ResumePage from "@/features/resume/page/ResumePage"
 
 export default function ResumePageRoute() {
-  return <div>ResumePageRoute</div>
+  return <ResumePage />
 }

@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input"
 import React, { useState } from "react"
 import { CreateProjectModal } from "../components/CreateProjectModal"
+import { EditProjectModal } from "../components/EditProjectModal"
 import { ProjectCard } from "../components/ProjectCard"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,10 +14,28 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { RotateCcw, ChevronDown } from "lucide-react"
 
+type ProjectFormData = {
+  title: string
+  description: string
+  technologies: string
+  category: string
+  status: "draft" | "published"
+  featured: boolean
+  liveUrl: string
+  githubUrl: string
+  image: {
+    url: string
+    public_id: string
+  }
+}
+
 export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [searchTerm, setSearchTerm] = useState("")
+  const [editOpen, setEditOpen] = useState(false)
+  const [selectedProject, setSelectedProject] =
+    useState<ProjectFormData | null>(null)
 
   const projects = [
     {
@@ -172,11 +191,31 @@ export default function ProjectsPage() {
           <ProjectCard
             key={index}
             project={project}
-            onEdit={(project) => console.log("Edit:", project)}
+            onEdit={(project) => {
+              setSelectedProject({
+                title: project.title,
+                description: project.description,
+                technologies: project.technologies.join(","),
+                category: project.category,
+                status: project.status,
+                featured: project.featured,
+                liveUrl: project.liveUrl,
+                githubUrl: project.githubUrl,
+                image: project.image || { url: "", public_id: "" },
+              })
+              setEditOpen(true)
+            }}
             onDelete={(id) => console.log("Delete:", id)}
           />
         ))}
       </div>
+
+      {/* Edit Project Modal */}
+      <EditProjectModal
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        project={selectedProject}
+      />
     </section>
   )
 }
