@@ -59,21 +59,27 @@ export function AppSidebar() {
           <ShieldCheck className="size-5" />
 
           {/* Hide text when collapsed */}
-          {!isCollapsed && <span className="font-semibold">Admin Panel</span>}
+          {!isCollapsed && (
+            <span className="*: font-semibold">Admin Panel</span>
+          )}
         </div>
       </SidebarHeader>
 
       {/* Content */}
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
+          <SidebarMenu className="gap-2">
             {menuItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname.startsWith(item.href)
 
               return (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild isActive={isActive}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive}
+                    className="py-4"
+                  >
                     <Link href={item.href}>
                       <Icon />
                       <span>{item.name}</span>
