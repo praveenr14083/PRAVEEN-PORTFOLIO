@@ -1,15 +1,14 @@
 "use client"
 
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -19,11 +18,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Plus, X, Upload, Loader2 } from "lucide-react"
-import { useCreateTechnology } from "../hooks/useTechnologies"
-import { technologySchema, TechnologyInput } from "../validation/technology.validation"
-import { ZodError } from "zod"
+import { Loader2, Plus, Upload, X } from "lucide-react"
+import React, { useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useCreateTechnology } from "../hooks/useTechnologies"
+import { technologySchema } from "../validation/technology.validation"
 
 type TechnologyFormData = {
   name: string
@@ -141,7 +141,7 @@ export function CreateTechnologyModal() {
                 setFormData({ ...formData, category: value })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

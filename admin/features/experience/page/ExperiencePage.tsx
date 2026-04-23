@@ -1,16 +1,16 @@
 "use client"
 
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { RotateCcw } from "lucide-react"
+import { useState } from "react"
 import { CreateExperienceModal } from "../components/CreateExperienceModal"
 import { EditExperienceModal } from "../components/EditExperienceModal"
 import { ExperienceCard } from "../components/ExperienceCard"
-import { Button } from "@/components/ui/button"
-import { RotateCcw } from "lucide-react"
-import { useExperience, useDeleteExperience } from "../hooks/useExperience"
-import { Skeleton } from "@/components/ui/skeleton"
-import { ConfirmDialog } from "@/components/common/ConfirmDialog"
-import { NotFound } from "@/components/common/NotFound"
+import { useDeleteExperience, useExperience } from "../hooks/useExperience"
 
 type ExperienceFormData = {
   role: string
@@ -78,13 +78,13 @@ export default function ExperiencePage() {
 
       {/* Experience List */}
       {isLoading ? (
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-40 w-full rounded-lg" />
           ))}
         </div>
       ) : filteredExperience.length > 0 ? (
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredExperience.map((experience, index) => (
             <ExperienceCard
               key={index}

@@ -1,6 +1,5 @@
 "use client"
 
-import React, { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ExternalLink, GitBranch, Pen, Star, Trash } from "lucide-react"
+import { useState } from "react"
 
 type ProjectCardProps = {
   project: {
@@ -34,7 +34,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <Card className="group flex flex-col justify-between overflow-hidden p-0">
+    <Card className="group flex flex-col justify-between overflow-hidden p-4">
       {/* Image Section */}
       {project.image && (
         <div
@@ -54,7 +54,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
               {/* Live Demo Button */}
               {project.liveUrl && (
                 <Button
-                  size="default"
+                  size="sm"
                   variant="default"
                   onClick={() => window.open(project.liveUrl, "_blank")}
                   className="gap-2"
@@ -67,7 +67,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
               {/* GitHub Button */}
               {project.githubUrl && (
                 <Button
-                  size="default"
+                  size="sm"
                   variant="secondary"
                   onClick={() => window.open(project.githubUrl, "_blank")}
                   className="gap-2"
@@ -98,7 +98,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         </div>
       )}
 
-      <CardHeader>
+      <CardHeader className="px-0">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="line-clamp-1 text-xl">
@@ -113,7 +113,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 px-4">
+      <CardContent className="space-y-4 px-0">
         {/* Description */}
         {project.description && (
           <CardDescription className="text-sm">
@@ -133,14 +133,15 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between gap-2 p-4">
+      <CardFooter className="flex items-center justify-between gap-2 px-0">
         {/* Action Buttons (Edit/Delete) - Optional */}
         {(onEdit || onDelete) && (
           <div className="flex w-full items-end justify-end gap-2">
             {onEdit && (
               <Button
-                size="sm"
+                className="flex-1"
                 variant="outline"
+                size="sm"
                 onClick={() => onEdit(project)}
               >
                 <Pen />
@@ -154,7 +155,6 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
                 onClick={() => onDelete(project._id || project.title || "")}
               >
                 <Trash />
-                Delete
               </Button>
             )}
           </div>

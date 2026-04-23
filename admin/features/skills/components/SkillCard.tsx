@@ -1,6 +1,5 @@
 "use client"
 
-import React, { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Pen, Trash } from "lucide-react"
 import { DynamicIcon } from "lucide-react/dynamic"
+import { useState } from "react"
 
 type SkillCardProps = {
   skill: {
@@ -31,12 +31,12 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
 
   return (
     <Card
-      className="group flex flex-col justify-between py-5"
+      className="group flex flex-col justify-between p-4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Icon Section */}
-      <CardHeader className="flex items-center gap-2">
+      <CardHeader className="flex items-center gap-2 px-0">
         <div className="rounded-lg bg-muted p-2">
           <DynamicIcon name={(skill.icon || "code") as any} />
         </div>
@@ -47,7 +47,7 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
       </CardHeader>
 
       {/* Content Section */}
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 px-0">
         {/* Description */}
         {skill.description && (
           <CardDescription className="text-sm">
@@ -70,7 +70,7 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
       </CardContent>
 
       {/* Footer with Action Buttons */}
-      <CardFooter className="flex items-center justify-between gap-2">
+      <CardFooter className="flex items-center justify-between gap-2 px-0">
         {/* Action Buttons (Edit/Delete) */}
         {(onEdit || onDelete) && (
           <div className="flex w-full items-end justify-end gap-2">
@@ -79,9 +79,9 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
                 size="sm"
                 variant="outline"
                 onClick={() => onEdit(skill)}
-                className="gap-1"
+                className="flex-1"
               >
-                <Pen className="h-4 w-4" />
+                <Pen />
                 Edit
               </Button>
             )}
@@ -92,8 +92,7 @@ export function SkillCard({ skill, onEdit, onDelete }: SkillCardProps) {
                 onClick={() => onDelete(skill._id || "")}
                 className="gap-1"
               >
-                <Trash className="h-4 w-4" />
-                Delete
+                <Trash />
               </Button>
             )}
           </div>

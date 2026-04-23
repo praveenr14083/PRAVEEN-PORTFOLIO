@@ -12,13 +12,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 import { NotFound } from "@/components/common/NotFound"
 
-type SkillFormData = {
-  name: string
-  description: string
-  icon: string
-  technologies: string
-}
-
 export default function SkillsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)

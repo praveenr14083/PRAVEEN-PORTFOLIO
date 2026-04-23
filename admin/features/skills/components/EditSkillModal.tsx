@@ -65,7 +65,7 @@ export function EditSkillModal({
         description: skill.description || "",
         icon: skill.icon || "code",
         technologies: Array.isArray(skill.technologies)
-          ? skill.technologies.join(", ")
+          ? skill.technologies.join(",")
           : skill.technologies || "",
       })
       setErrors({})
@@ -120,7 +120,7 @@ export function EditSkillModal({
         description: skill.description || "",
         icon: skill.icon || "code",
         technologies: Array.isArray(skill.technologies)
-          ? skill.technologies.join(", ")
+          ? skill.technologies.join(",")
           : skill.technologies || "",
       })
       setErrors({})

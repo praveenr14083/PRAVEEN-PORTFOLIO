@@ -1,16 +1,16 @@
 "use client"
 
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React, { useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import { RotateCcw } from "lucide-react"
+import { useState } from "react"
 import { CreateEducationModal } from "../components/CreateEducationModal"
 import { EditEducationModal } from "../components/EditEducationModal"
 import { EducationCard } from "../components/EducationCard"
-import { Button } from "@/components/ui/button"
-import { RotateCcw } from "lucide-react"
-import { useEducation, useDeleteEducation } from "../hooks/useEducation"
-import { Skeleton } from "@/components/ui/skeleton"
-import { ConfirmDialog } from "@/components/common/ConfirmDialog"
-import { NotFound } from "@/components/common/NotFound"
+import { useDeleteEducation, useEducation } from "../hooks/useEducation"
 
 type EducationFormData = {
   degree: string
@@ -78,13 +78,13 @@ export default function EducationPage() {
 
       {/* Education List */}
       {isLoading ? (
-        <div className="mt-4 space-y-4">
-          {Array.from({ length: 2 }).map((_, i) => (
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-40 w-full rounded-lg" />
           ))}
         </div>
       ) : filteredEducation.length > 0 ? (
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredEducation.map((education, index) => (
             <EducationCard
               key={index}

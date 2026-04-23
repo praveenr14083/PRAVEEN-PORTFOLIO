@@ -1,6 +1,7 @@
 "use client"
 
-import React from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -9,9 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Pen, Trash, Calendar } from "lucide-react"
+import { Calendar, Locate, Pen, Trash } from "lucide-react"
 
 type EducationCardProps = {
   education: {
@@ -42,8 +41,8 @@ export function EducationCard({
   }
 
   return (
-    <Card className="flex flex-col justify-between">
-      <CardHeader>
+    <Card className="flex flex-col justify-between p-4">
+      <CardHeader className="px-0">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="line-clamp-1 text-lg">
@@ -59,10 +58,10 @@ export function EducationCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 px-0">
         {education.location && (
-          <p className="text-sm text-muted-foreground">
-            📍 {education.location}
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Locate className="h-4 w-4" /> {education.location}
           </p>
         )}
 
@@ -84,15 +83,15 @@ export function EducationCard({
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-end gap-2">
+      <CardFooter className="flex justify-end gap-2 px-0">
         {onEdit && (
           <Button
             size="sm"
             variant="outline"
             onClick={() => onEdit(education)}
-            className="gap-1"
+            className="flex-1"
           >
-            <Pen className="h-4 w-4" />
+            <Pen />
             Edit
           </Button>
         )}
@@ -101,10 +100,8 @@ export function EducationCard({
             size="sm"
             variant="destructive"
             onClick={() => onDelete(education._id || "")}
-            className="gap-1"
           >
-            <Trash className="h-4 w-4" />
-            Delete
+            <Trash />
           </Button>
         )}
       </CardFooter>

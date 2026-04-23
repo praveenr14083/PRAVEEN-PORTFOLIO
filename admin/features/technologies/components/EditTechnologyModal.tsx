@@ -1,14 +1,13 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -18,11 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { X, Upload, Loader2 } from "lucide-react"
-import { useUpdateTechnology } from "../hooks/useTechnologies"
-import { technologySchema, TechnologyInput } from "../validation/technology.validation"
-import { ZodError } from "zod"
+import { Loader2, Upload, X } from "lucide-react"
+import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useUpdateTechnology } from "../hooks/useTechnologies"
+import { technologySchema } from "../validation/technology.validation"
 
 type TechnologyFormData = {
   name: string
@@ -32,7 +32,13 @@ type TechnologyFormData = {
 type EditTechnologyModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  technology?: (TechnologyFormData & { _id: string, icon?: { url: string; public_id: string } }) | any | null
+  technology?:
+    | (TechnologyFormData & {
+        _id: string
+        icon?: { url: string; public_id: string }
+      })
+    | any
+    | null
 }
 
 export function EditTechnologyModal({
@@ -167,7 +173,7 @@ export function EditTechnologyModal({
                 setFormData({ ...formData, category: value })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState } from "react"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Pen, Trash } from "lucide-react"
+import { useState } from "react"
 
 type CertificateCardProps = {
   certificate: {
@@ -26,7 +26,7 @@ export function CertificateCard({
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <Card className="group overflow-hidden">
+    <Card className="group overflow-hidden p-4">
       {/* Image Section */}
       {certificate.image?.url && (
         <div
@@ -43,14 +43,14 @@ export function CertificateCard({
       )}
 
       {/* Content Section */}
-      <CardContent className="p-4">
+      <CardContent className="px-0">
         <h3 className="line-clamp-2 text-lg font-semibold">
           {certificate.name || "Untitled Certificate"}
         </h3>
       </CardContent>
 
       {/* Footer with Action Buttons */}
-      <CardFooter className="flex items-center justify-between gap-2 p-4">
+      <CardFooter className="flex items-center justify-between gap-2 px-0">
         {(onEdit || onDelete) && (
           <div className="flex w-full justify-end gap-2">
             {onEdit && (
@@ -58,9 +58,9 @@ export function CertificateCard({
                 size="sm"
                 variant="outline"
                 onClick={() => onEdit(certificate)}
-                className="gap-1"
+                className="flex-1"
               >
-                <Pen className="h-4 w-4" />
+                <Pen />
                 Edit
               </Button>
             )}
@@ -69,10 +69,8 @@ export function CertificateCard({
                 size="sm"
                 variant="destructive"
                 onClick={() => onDelete(certificate._id || "")}
-                className="gap-1"
               >
-                <Trash className="h-4 w-4" />
-                Delete
+                <Trash />
               </Button>
             )}
           </div>
