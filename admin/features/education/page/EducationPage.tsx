@@ -10,6 +10,7 @@ import { RotateCcw } from "lucide-react"
 import { useEducation, useDeleteEducation } from "../hooks/useEducation"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 type EducationFormData = {
   degree: string
@@ -94,13 +95,15 @@ export default function EducationPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-semibold">No education found</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {searchTerm
-              ? "Try adjusting your search terms"
-              : "Add your education details"}
-          </p>
+        <div className="mt-4">
+          <NotFound
+            title="No education found"
+            description={
+              searchTerm
+                ? "Try adjusting your search terms"
+                : "Add your education details"
+            }
+          />
         </div>
       )}
 

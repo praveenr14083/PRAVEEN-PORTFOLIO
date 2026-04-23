@@ -16,6 +16,7 @@ import { RotateCcw, ChevronDown, RotateCw } from "lucide-react"
 import { useProjects, useDeleteProject } from "../hooks/useProjects"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 type ProjectFormData = {
   title: string
@@ -193,8 +194,11 @@ export default function ProjectsPage() {
             />
           ))
         ) : (
-          <div className="col-span-full py-20 text-center">
-            <p className="text-muted-foreground">No projects found.</p>
+          <div className="col-span-full">
+            <NotFound
+              title="No projects found"
+              description="Create your first project to get started"
+            />
           </div>
         )}
       </div>

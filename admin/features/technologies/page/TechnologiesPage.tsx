@@ -16,6 +16,7 @@ import { RotateCcw, ChevronDown } from "lucide-react"
 import { useTechnologies, useDeleteTechnology } from "../hooks/useTechnologies"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 export default function TechnologiesPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -125,13 +126,15 @@ export default function TechnologiesPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-semibold">No technologies found</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {searchTerm || selectedCategory !== "All Categories"
-              ? "Try adjusting your filters"
-              : "Add your first technology"}
-          </p>
+        <div className="mt-4">
+          <NotFound
+            title="No technologies found"
+            description={
+              searchTerm || selectedCategory !== "All Categories"
+                ? "Try adjusting your filters"
+                : "Add your first technology"
+            }
+          />
         </div>
       )}
 

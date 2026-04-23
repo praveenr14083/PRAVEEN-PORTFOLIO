@@ -10,14 +10,17 @@ import { RotateCcw } from "lucide-react"
 import { useCertificates, useDeleteCertificate } from "../hooks/useCertificates"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 export default function CertificatePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
-  const [selectedCertificate, setSelectedCertificate] = useState<any | null>(null)
+  const [selectedCertificate, setSelectedCertificate] = useState<any | null>(
+    null
+  )
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
-  
+
   const { data: certificates = [], isLoading } = useCertificates()
   const { mutate: deleteCertificate } = useDeleteCertificate()
 
@@ -82,13 +85,15 @@ export default function CertificatePage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-semibold">No certificates found</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {searchTerm
-              ? "Try adjusting your search terms"
-              : "Add your first certificate"}
-          </p>
+        <div className="mt-4">
+          <NotFound
+            title="No certificates found"
+            description={
+              searchTerm
+                ? "Try adjusting your search terms"
+                : "Add your first certificate"
+            }
+          />
         </div>
       )}
 

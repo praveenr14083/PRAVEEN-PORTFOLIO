@@ -7,6 +7,7 @@ import { ReplaceResumeModal } from "../components/ReplaceResumeModal"
 import { useResume, useDeleteResume } from "../hooks/useResume"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 import React, { useState } from "react"
 
 export default function ResumePage() {
@@ -38,7 +39,6 @@ export default function ResumePage() {
           Preview
         </Button>
 
-
         {/* Delete */}
         <Button
           variant="destructive"
@@ -66,6 +66,7 @@ export default function ResumePage() {
           <CardContent className="p-5">
             <div className="relative aspect-[4/5] w-full">
               <iframe
+                key={resume.file.url}
                 src={resume.file.url}
                 className="h-full w-full rounded-md border bg-white shadow-md"
                 title="Resume PDF Preview"
@@ -74,9 +75,10 @@ export default function ResumePage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="rounded-lg border border-dashed p-20 text-center">
-          <p className="text-muted-foreground">No resume uploaded Yet.</p>
-        </div>
+        <NotFound
+          title="No resume uploaded"
+          description="Upload your resume to get started"
+        />
       )}
 
       <ConfirmDialog

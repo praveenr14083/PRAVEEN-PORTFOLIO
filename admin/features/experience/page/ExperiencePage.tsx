@@ -10,6 +10,7 @@ import { RotateCcw } from "lucide-react"
 import { useExperience, useDeleteExperience } from "../hooks/useExperience"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 type ExperienceFormData = {
   role: string
@@ -94,13 +95,15 @@ export default function ExperiencePage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-semibold">No experience found</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {searchTerm
-              ? "Try adjusting your search terms"
-              : "Add your work experience"}
-          </p>
+        <div className="mt-4">
+          <NotFound
+            title="No experience found"
+            description={
+              searchTerm
+                ? "Try adjusting your search terms"
+                : "Add your work experience"
+            }
+          />
         </div>
       )}
 

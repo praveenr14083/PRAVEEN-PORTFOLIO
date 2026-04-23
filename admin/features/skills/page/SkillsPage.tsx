@@ -10,6 +10,7 @@ import { RotateCcw } from "lucide-react"
 import { useSkills, useDeleteSkill } from "../hooks/useSkills"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 
 type SkillFormData = {
   name: string
@@ -91,13 +92,15 @@ export default function SkillsPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-semibold">No skills found</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {searchTerm
-              ? "Try adjusting your search terms"
-              : "Create your first skill to get started"}
-          </p>
+        <div className="mt-4">
+          <NotFound
+            title="No skills found"
+            description={
+              searchTerm
+                ? "Try adjusting your search terms"
+                : "Create your first skill to get started"
+            }
+          />
         </div>
       )}
 
