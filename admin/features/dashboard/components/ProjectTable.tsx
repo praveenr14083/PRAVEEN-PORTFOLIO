@@ -73,7 +73,7 @@ export function ProjectTable({ data }: Props) {
   const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject()
 
   // ✅ Columns with S.No, Image+Title combined, and Actions in dropdown
-  const columns: ColumnDef<Project>[] = [
+  const columns: ColumnDef<Project>[] = useMemo(() => [
     {
       id: "sno",
       header: "S.No",
@@ -184,7 +184,7 @@ export function ProjectTable({ data }: Props) {
         )
       },
     },
-  ]
+  ], [])
 
   // ✅ Global search through ALL fields
   const filteredData = useMemo(() => {

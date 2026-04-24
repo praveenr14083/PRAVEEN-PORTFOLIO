@@ -3,7 +3,12 @@ import { getResume, updateResume, deleteResume } from "../services/resume.servic
 import { toast } from "sonner";
 
 export const useResume = () => {
-  return useQuery({ queryKey: ["resume"], queryFn: getResume });
+  return useQuery({ 
+    queryKey: ["resume"], 
+    queryFn: getResume,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    refetchOnWindowFocus: false // Prevents unnecessary fetching on tab switch
+  });
 };
 
 export const useUpdateResume = () => {

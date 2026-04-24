@@ -1,7 +1,7 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { CreateSkillModal } from "../components/CreateSkillModal"
 import { EditSkillModal } from "../components/EditSkillModal"
 import { SkillCard } from "../components/SkillCard"
@@ -27,14 +27,16 @@ export default function SkillsPage() {
   }
 
   // Filter skills based on search
-  const filteredSkills = skills.filter(
-    (skill) =>
-      skill.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      skill.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      skill.technologies?.some((tech) =>
-        tech.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-  )
+  const filteredSkills = useMemo(() => {
+    return skills.filter(
+      (skill) =>
+        skill.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        skill.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        skill.technologies?.some((tech) =>
+          tech.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    )
+  }, [skills, searchTerm])
 
   const handleEdit = (skill: any) => {
     setSelectedSkill(skill)
