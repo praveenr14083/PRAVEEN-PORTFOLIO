@@ -1,51 +1,57 @@
-import admin from "firebase-admin";
-import dotenv from "dotenv";
-import logger from "../utils/logger.js";
+import admin from 'firebase-admin'
+import { env } from '../config/env.config.js'
+import logger from '../utils/logger.js'
 
-dotenv.config();
-
-let isFirebaseInitialized = false;
+let isFirebaseInitialized = false
 
 try {
   const serviceAccountParams = {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    projectId: env.firebase.projectId,
+    clientEmail: env.firebase.clientEmail,
     // Replace literal '\n' with actual line breaks for the private key
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-  };
+    privateKey: env.firebase.privateKey?.replace(/\\n/g, '\n'),
+  }
 
-  if (serviceAccountParams.projectId && serviceAccountParams.clientEmail && serviceAccountParams.privateKey) {
+  if (
+    serviceAccountParams.projectId &&
+    serviceAccountParams.clientEmail &&
+    serviceAccountParams.privateKey
+  ) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccountParams),
-    });
-    isFirebaseInitialized = true;
-    logger.info("Firebase Admin SDK initialized successfully");
+    })
+    isFirebaseInitialized = true
+    logger.info('Firebase Admin SDK initialized successfully')
   } else {
-    logger.warn("Firebase Admin SDK check: credentials missing (not initialized).");
+    logger.warn('Firebase Admin SDK check: credentials missing (not initialized).')
   }
 } catch (error) {
-  logger.error("Firebase Admin SDK initialize error:", { stack: error.stack });
+  logger.error('Firebase Admin SDK initialize error:', { stack: error.stack })
 }
 
 export const verifyAdmin = async (req, res, next) => {
   if (!isFirebaseInitialized) {
     // If not initialized, throw error.
-    logger.warn("Auth bypass: Firebase not configured. Ensure ENV vars are set.");
-    return res.status(500).json({ success: false, message: "Server misconfiguration: Firebase not initialized." });
+    logger.warn('Auth bypass: Firebase not configured. Ensure ENV vars are set.')
+    return res
+      .status(500)
+      .json({ success: false, message: 'Server misconfiguration: Firebase not initialized.' })
   }
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Unauthorized: Missing Token" });
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Unauthorized: Missing Token' })
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(' ')[1]
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    req.user = decodedToken;
-    next();
+    const decodedToken = await admin.auth().verifyIdToken(token)
+    req.user = decodedToken
+    next()
   } catch (err) {
-    return res.status(401).json({ success: false, message: "Unauthorized: Invalid Token", error: err.message });
+    return res
+      .status(401)
+      .json({ success: false, message: 'Unauthorized: Invalid Token', error: err.message })
   }
-};
+}

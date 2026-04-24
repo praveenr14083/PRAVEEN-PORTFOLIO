@@ -1,17 +1,17 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { ENV } from "./env";
+import { getApp, getApps, initializeApp } from "firebase/app"
+import { getAuth } from "firebase/auth"
+import { env } from "@/config/env.config"
 
 const firebaseConfig = {
-  apiKey: ENV.FIREBASE.API_KEY,
-  authDomain: ENV.FIREBASE.AUTH_DOMAIN,
-  projectId: ENV.FIREBASE.PROJECT_ID,
-  storageBucket: ENV.FIREBASE.STORAGE_BUCKET,
-  messagingSenderId: ENV.FIREBASE.MESSAGING_SENDER_ID,
-  appId: ENV.FIREBASE.APP_ID,
-};
+  apiKey: env.firebase.apiKey,
+  authDomain: env.firebase.authDomain,
+  projectId: env.firebase.projectId,
+  storageBucket: env.firebase.storageBucket,
+  messagingSenderId: env.firebase.messagingSenderId,
+  appId: env.firebase.appId,
+}
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+const auth = getAuth(app)
 
-export { app, auth };
+export { app, auth }

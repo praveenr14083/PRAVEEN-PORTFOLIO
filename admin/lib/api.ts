@@ -1,14 +1,14 @@
-import axios from "axios";
-import { ENV } from "./env";
-import { auth } from "./firebase";
+import { env } from "@/config/env.config"
+import axios from "axios"
+import { auth } from "./firebase"
 
 export const api = axios.create({
-  baseURL: ENV.API_URL,
-});
+  baseURL: env.apiUrl,
+})
 
 api.interceptors.request.use(async (config) => {
   let token = localStorage.getItem("token")
-  
+
   if (!token && auth.currentUser) {
     token = await auth.currentUser.getIdToken()
   }

@@ -1,12 +1,9 @@
-"use client";
+'use client'
 import { ButtonRounded } from '@/components/common/ButtonRounded'
 import { BriefcaseBusiness } from 'lucide-react'
 import { Link as ScrollLink } from 'react-scroll'
-import { SKILLS_DATA } from '../data/skills'
 
 export function AboutSection() {
-  const allSkills = SKILLS_DATA.flatMap((item) => item.skills)
-
   return (
     <section id="about" className="section-fullscreen bg-background overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2">

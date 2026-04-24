@@ -1,6 +1,8 @@
 import cors from 'cors'
 import express from 'express'
 import morgan from 'morgan'
+import { env } from './config/env.config.js'
+import { apiLimiter } from './middleware/rateLimiter.middleware.js'
 import logger from './utils/logger.js'
 
 import certificateRoutes from './routes/certificate.routes.js'
@@ -17,7 +19,17 @@ import { errorMiddleware } from './middleware/error.middleware.js'
 
 const app = express()
 
-app.use(cors())
+// Rate Limiting
+app.use(apiLimiter)
+
+// CORS
+app.use(
+  cors({
+    origin: env.corsOrigin,
+    credentials: true,
+  })
+)
+
 app.use(express.json())
 // Pipe HTTP request logs through Winston
 app.use(morgan('combined', { stream: logger.stream }))
