@@ -1,9 +1,48 @@
-import React from "react";
+"use client";
+import React, { useMemo } from "react";
 import { EdExCard } from "../components/EdExCard";
 import { EDUCATION, EXPERIENCE } from "../data/edex";
-import { BookSearch, CaseLower, Laptop } from "lucide-react";
+import { BookSearch, Laptop, GraduationCap, School, University, BookOpen, Briefcase, Code, Code2 } from "lucide-react";
+import { usePortfolio } from "@/hooks/usePortfolio";
+
+const ICON_MAP: Record<string, any> = {
+  GraduationCap, School, University, BookOpen, Briefcase, Code, Code2
+};
 
 export function MyJourneySection() {
+  const { portfolioData, isLoading } = usePortfolio();
+  const { education: fetchedEdu, experience: fetchedExp } = portfolioData;
+
+  const formatDate = (date: any) => {
+    if (!date) return "";
+    return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(date));
+  };
+
+  const displayExperience = useMemo(() => {
+    return fetchedExp && fetchedExp.length > 0
+      ? fetchedExp.map((exp: any) => ({
+          id: exp._id?.toString() || exp.id,
+          title: exp.role,
+          description: exp.company,
+          year: `${formatDate(exp.startDate)} - ${exp.isCurrent ? 'Present' : formatDate(exp.endDate)}`,
+          isCurrent: exp.isCurrent,
+          icon: ICON_MAP[exp.icon] || Code
+        }))
+      : EXPERIENCE;
+  }, [fetchedExp]);
+
+  const displayEducation = useMemo(() => {
+    return fetchedEdu && fetchedEdu.length > 0
+      ? fetchedEdu.map((edu: any) => ({
+          id: edu._id?.toString() || edu.id,
+          title: edu.degree,
+          description: edu.institute,
+          year: `${formatDate(edu.startDate)} - ${edu.isCurrent ? 'Present' : formatDate(edu.endDate)}`,
+          isCurrent: edu.isCurrent,
+          icon: ICON_MAP[edu.icon] || GraduationCap
+        }))
+      : EDUCATION;
+  }, [fetchedEdu]);
   return (
     <section id="journey" className="section-fullscreen bg-background">
       <div className="w-full flex flex-col items-center justify-center gap-10">
@@ -31,8 +70,8 @@ export function MyJourneySection() {
             </div>
 
             <div>
-              {EXPERIENCE.map((exp) => (
-                <EdExCard key={exp.id} data={exp} />
+              {displayExperience.map((exp: any, index: number) => (
+                <EdExCard key={exp.id || index} data={exp} />
               ))}
             </div>
 
@@ -46,8 +85,8 @@ export function MyJourneySection() {
               </div>
             </div>
             <div>
-              {EDUCATION.map((edu) => (
-                <EdExCard key={edu.id} data={edu} />
+              {displayEducation.map((edu: any, index: number) => (
+                <EdExCard key={edu.id || index} data={edu} />
               ))}
             </div>
           </div>

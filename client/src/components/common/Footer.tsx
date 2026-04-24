@@ -1,10 +1,17 @@
+"use client";
 import { SocialMedia } from "@/components/common/SocialMedia";
 import { SKILLS_DATA } from "@/uiPages/home/data/skills";
 import React from "react";
 import Marquee from "react-fast-marquee";
+import { usePortfolio } from "@/hooks/usePortfolio";
 
 export function Footer() {
-  const allSkills = SKILLS_DATA.flatMap((item) => item.skills);
+  const { portfolioData } = usePortfolio();
+  const { technologies } = portfolioData;
+
+  const displaySkills = technologies && technologies.length > 0 
+    ? technologies 
+    : SKILLS_DATA.flatMap((item) => item.skills);
 
   return (
     <section
@@ -31,7 +38,7 @@ export function Footer() {
       {/* ✅ Marquee Using Local Skills Array */}
       <div className="relative border-dashed border-t border-b border-gray-400/20 py-4 italic overflow-hidden">
         <Marquee className="w-full h-[6rem]">
-          {allSkills.map((skill, index) => (
+          {displaySkills.map((skill, index) => (
             <h1
               key={index}
               className="font-semibold text-4xl md:text-7xl flex items-center pl-10 md:pl-20"

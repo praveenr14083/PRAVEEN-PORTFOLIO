@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { ProjectCard } from "../components/ProjectCard";
 import { cn } from "@/lib/utils";
 import { Project } from "../data/projects";
-import { useProjects } from "@/hooks/useProjects";
+import { usePortfolio } from "@/hooks/usePortfolio";
 
 type Category = {
   id: string;
@@ -13,27 +13,41 @@ type Category = {
 
 export function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState("all");
-  const { data: projects = [], isLoading, error } = useProjects();
+  const { portfolioData, isLoading, error } = usePortfolio();
+  const { projects: fetchedProjects } = portfolioData;
+
+  const displayProjects = useMemo(() => {
+    return fetchedProjects.map((p: any) => ({
+      id: p._id || p.id,
+      title: p.title,
+      description: p.description,
+      tech: p.technologies || [],
+      demo: p.liveUrl,
+      github: p.githubUrl,
+      image: p.image?.url || "https://placehold.co/600x400/png",
+      category: p.category
+    }));
+  }, [fetchedProjects]);
 
   // 🔥 Extract unique categories from projects
   const categories = useMemo(() => {
     const uniqueCategories = Array.from(
-      new Set(projects.map((p: Project) => p.category)),
-    ).map((cat: string) => ({
+      new Set(displayProjects.map((p: any) => p.category)),
+    ).map((cat: any) => ({
       id: cat.toLowerCase(),
       name: cat,
       type: cat.toLowerCase(),
     }));
 
     return [{ id: "all", name: "All", type: "all" }, ...uniqueCategories];
-  }, [projects]);
+  }, [displayProjects]);
 
   // 🔥 Filter projects by active category
   const filteredProjects =
     activeCategory === "all"
-      ? projects
-      : projects.filter(
-          (p: Project) => p.category.toLowerCase() === activeCategory,
+      ? displayProjects
+      : displayProjects.filter(
+          (p: any) => p.category.toLowerCase() === activeCategory,
         );
 
   return (

@@ -1,19 +1,19 @@
-import express from 'express'
 import cors from 'cors'
+import express from 'express'
 import morgan from 'morgan'
 import logger from './utils/logger.js'
 
-import projectRoutes from './routes/project.routes.js'
-import technologyRoutes from './routes/technology.routes.js'
-import skillRoutes from './routes/skill.routes.js'
 import certificateRoutes from './routes/certificate.routes.js'
-import resumeRoutes from './routes/resume.routes.js'
 import educationRoutes from './routes/education.routes.js'
 import experienceRoutes from './routes/experience.routes.js'
+import projectRoutes from './routes/project.routes.js'
+import resumeRoutes from './routes/resume.routes.js'
+import skillRoutes from './routes/skill.routes.js'
 import statsRoutes from './routes/stats.routes.js'
+import technologyRoutes from './routes/technology.routes.js'
 
-import { errorMiddleware } from './middleware/error.middleware.js'
 import { verifyAdmin } from './middleware/auth.middleware.js'
+import { errorMiddleware } from './middleware/error.middleware.js'
 
 const app = express()
 

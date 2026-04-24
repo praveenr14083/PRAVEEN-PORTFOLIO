@@ -1,33 +1,23 @@
-import React from "react";
-import {
-  GraduationCap,
-  Cog,
-  School,
-  University,
-  Building2,
-  Building,
-} from "lucide-react";
-
 type EdExCardProps = {
   data: {
-    id: string;
-    year: string;
-    title: string;
-    description: string;
-    percentage?: string;
-    icon: React.ElementType;
-  };
-};
+    id: string
+    year: string
+    title: string
+    description: string
+    percentage?: string
+    isCurrent?: boolean
+  }
+}
 
 export function EdExCard({ data }: EdExCardProps) {
   return (
-    // Wrap Icon and Content Section
+    // Wrap Round and Content Section
     <div className="w-full flex gap-1">
       <div className="flex flex-col items-center">
-        {/* Icon and Vertical line */}
-        <div className="p-3 border-1 border-dashed border-primary-color rounded-full">
-          <data.icon />
-        </div>
+        {/*Round and Vertical line */}
+        <div
+          className={`p-2 rounded-full ${data.isCurrent ? 'bg-green-500 animate-pulse' : 'bg-primary-color'}`}
+        />
 
         {/* Vertical Line */}
         <div className="border-l-1 border-dashed border-primary-color h-full w-[1px]"></div>
@@ -52,5 +42,5 @@ export function EdExCard({ data }: EdExCardProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

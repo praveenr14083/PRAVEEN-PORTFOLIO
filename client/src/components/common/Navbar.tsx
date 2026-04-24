@@ -6,15 +6,16 @@ import { Link as ScrollLink } from "react-scroll";
 import { Menu, X, Download } from "lucide-react";
 import { ButtonRounded } from "@/components/common/ButtonRounded";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useResume } from "@/hooks/useResume";
+import { usePortfolio } from "@/hooks/usePortfolio";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: resume } = useResume();
+  const { portfolioData } = usePortfolio();
+  const resumeUrl = portfolioData?.resume?.file?.url;
 
   const handleResumeClick = () => {
-    if (resume?.fileUrl) {
-      window.open(resume.fileUrl, "_blank");
+    if (resumeUrl) {
+      window.open(resumeUrl, "_blank");
     }
   };
 
@@ -73,7 +74,7 @@ export function Navbar() {
         </div>
       </nav>
 
-      {isOpen && <DropdownMenu onClose={() => setIsOpen(false)} resumeUrl={resume?.fileUrl} />}
+      {isOpen && <DropdownMenu onClose={() => setIsOpen(false)} resumeUrl={resumeUrl} />}
     </>
   );
 }

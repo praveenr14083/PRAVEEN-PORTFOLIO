@@ -1,9 +1,8 @@
-"use client";
-import { ButtonRounded } from "@/components/common/ButtonRounded";
-import Typewriter from "typewriter-effect";
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Link as ScrollLink } from "react-scroll";
+'use client'
+import { ButtonRounded } from '@/components/common/ButtonRounded'
+import { cn } from '@/lib/utils'
+import { Link as ScrollLink } from 'react-scroll'
+import Typewriter from 'typewriter-effect'
 
 export function HeroSection() {
   return (
@@ -15,10 +14,10 @@ export function HeroSection() {
       <div className="pointer-events-none absolute inset-0">
         <div
           className={cn(
-            "absolute -z-10 inset-0",
-            "[background-size:60px_60px]",
-            "[background-image:linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)]",
-            "dark:[background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]",
+            'absolute -z-10 inset-0',
+            '[background-size:60px_60px]',
+            '[background-image:linear-gradient(to_right,#e4e4e7_1px,transparent_1px),linear-gradient(to_bottom,#e4e4e7_1px,transparent_1px)]',
+            'dark:[background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]'
           )}
         />
         <div className="-z-10 pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_10%,black)] dark:bg-black"></div>
@@ -47,13 +46,11 @@ export function HeroSection() {
               />
             </h1>
             <p className="text-md text-muted-foreground text-center lg:text-justify ">
-              I am Praveen R, a passionate Full-Stack Developer, Web & UI
-              Designer with strong attention to detail. I specialize in building
-              complete web applications from frontend to backend. I blend
-              creativity with technical expertise to design intuitive interfaces
-              and develop scalable, modern solutions. I'm dedicated to crafting
-              responsive, user-friendly digital experiences across the entire
-              development stack.
+              I am Praveen R, a passionate Full-Stack Developer, Web & UI Designer with strong
+              attention to detail. I specialize in building complete web applications from frontend
+              to backend. I blend creativity with technical expertise to design intuitive interfaces
+              and develop scalable, modern solutions. I'm dedicated to crafting responsive,
+              user-friendly digital experiences across the entire development stack.
             </p>
           </div>
           <div className="w-full flex items-center justify-center lg:justify-start gap-4">
@@ -72,5 +69,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

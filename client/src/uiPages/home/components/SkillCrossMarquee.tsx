@@ -1,12 +1,18 @@
+"use client";
 import React from 'react'
 import Marquee from "react-fast-marquee";
 import { SKILLS_DATA } from '../data/skills';
 import { Sparkle } from 'lucide-react';
-
-const allSkills = SKILLS_DATA.flatMap((item) => item.skills);
-
+import { usePortfolio } from '@/hooks/usePortfolio';
 
 export function SkillCrossMarquee() {
+    const { portfolioData } = usePortfolio();
+    const { technologies } = portfolioData;
+
+    const marqueeItems = technologies && technologies.length > 0 
+        ? technologies 
+        : SKILLS_DATA.flatMap((item) => item.skills);
+
     return (
         <div className="overflow-hidden">
             <div className="relative my-16">
@@ -14,7 +20,7 @@ export function SkillCrossMarquee() {
                 {/* BACK MARQUEE */}
                 <div className="absolute inset-0 skew-4 bg-white text-black py-2">
                     <Marquee speed={40} direction="right" className="h-[2rem]">
-                        {allSkills.map((skill, index) => (
+                        {marqueeItems.map((skill, index) => (
                             <div key={index} className="flex items-center">
                                 <h1 className="font-semibold text-md md:text-xl">
                                     {skill.name}
@@ -28,7 +34,7 @@ export function SkillCrossMarquee() {
                 {/* FRONT MARQUEE */}
                 <div className="relative -skew-4 bg-primary-color py-2">
                     <Marquee speed={60} className="h-[2rem]">
-                        {allSkills.map((skill, index) => (
+                        {marqueeItems.map((skill, index) => (
                             <div key={index} className="flex items-center">
                                 <h1 className="font-semibold text-md md:text-xl">
                                     {skill.name}
@@ -41,6 +47,5 @@ export function SkillCrossMarquee() {
 
             </div>
         </div>
-
     )
 }

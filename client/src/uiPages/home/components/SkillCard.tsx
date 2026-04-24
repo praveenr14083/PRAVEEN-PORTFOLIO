@@ -39,7 +39,7 @@ export function SkillCard({
             key={index}
             className="bg-foreground/4 inline-flex items-center gap-2 p-2 rounded"
           >
-            <img className="w-6" src={skill.icon} alt={skill.name} />
+            {skill.icon && <img className="w-6" src={skill.icon} alt={skill.name} />}
             <p className="text-sm">{skill.name}</p>
           </div>
         ))}

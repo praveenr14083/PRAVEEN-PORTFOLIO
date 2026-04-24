@@ -1,9 +1,29 @@
 "use client";
 import React from "react";
+import { Monitor, Server, Database, Brain } from "lucide-react";
 import { SkillCard } from "../components/SkillCard";
 import { SKILLS_DATA } from "../data/skills";
+import { usePortfolio } from "@/hooks/usePortfolio";
+
+const ICON_MAP: Record<string, any> = {
+  Monitor,
+  Server,
+  Database,
+  Brain,
+};
 
 export function SkillsSection() {
+  const { portfolioData, isLoading } = usePortfolio();
+  const { skills: fetchedSkills } = portfolioData;
+
+  const displaySkills = fetchedSkills && fetchedSkills.length > 0 
+    ? fetchedSkills.map((s: any) => ({
+        title: s.name,
+        description: s.description,
+        Icon: ICON_MAP[s.icon] || Monitor,
+        skills: s.technologies.map((t: string) => ({ name: t, icon: "" }))
+      }))
+    : SKILLS_DATA;
   return (
     <section id="skills" className="section-fullscreen bg-background">
       <div className="w-full flex flex-col items-center justify-center gap-10">
@@ -31,7 +51,7 @@ export function SkillsSection() {
 
           {/* RIGHT - Scrollable Skills (Desktop Only) */}
           <div className="flex flex-col items-center justify-start gap-8">
-            {SKILLS_DATA.map((skillCategory, index) => (
+            {displaySkills.map((skillCategory, index) => (
               <SkillCard
                 key={index}
                 title={skillCategory.title}
