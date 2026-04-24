@@ -1,0 +1,35 @@
+import { ButtonRounded } from "@/components/common/ButtonRounded";
+import { BriefcaseBusiness } from "lucide-react";
+import { SKILLS_DATA } from "../data/skills";
+import React from "react";
+
+export function AboutSection() {
+  const allSkills = SKILLS_DATA.flatMap((item) => item.skills);
+
+  return (
+    <div className="overflow-hidden">
+      <section id="about" className="section-fullscreen bg-background">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="flex items-center justify-center p-10">
+            <img className="w-96" src="/images/about.png" alt="" />
+          </div>
+          <div className="flex flex-col items-center lg:items-start justify-center gap-8">
+            <h1 className="text-2xl lg:text-4xl text-center lg:text-start font-doto font-bold uppercase">
+              About Me
+            </h1>
+            <p className="text-md text-muted-foreground text-center lg:text-justify ">
+              I am Praveen R, a B.Sc. Computer Science graduate with a solid
+              programming foundation. I specialize as a Full-Stack Developer
+              using React, Next.js, and FastAPI. I work with both SQL and NoSQL
+              databases like Firebase. I combine technical expertise with design
+              skills to build complete, responsive web applications. I'm
+              passionate about learning new technologies and creating impactful
+              digital experiences.
+            </p>
+            <ButtonRounded icon={BriefcaseBusiness}>Hire Me</ButtonRounded>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
