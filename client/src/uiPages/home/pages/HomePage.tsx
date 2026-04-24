@@ -1,11 +1,11 @@
-import React from "react";
-import { HeroSection } from "../sections/HeroSection";
-import { AboutSection } from "../sections/AboutSection";
-import { SkillsSection } from "../sections/SkillsSection";
-import { ProjectsSection } from "../sections/ProjectsSection";
-import { MyJourneySection } from "../sections/MyJourneySection";
-import { ContactSection } from "../sections/ContactSection";
-import { SkillCrossMarquee } from "../components/SkillCrossMarquee";
+import { SkillCrossMarquee } from '../components/SkillCrossMarquee'
+import { AboutSection } from '../sections/AboutSection'
+import { CertificateSection } from '../sections/CertificateSection'
+import { ContactSection } from '../sections/ContactSection'
+import { HeroSection } from '../sections/HeroSection'
+import { MyJourneySection } from '../sections/MyJourneySection'
+import { ProjectsSection } from '../sections/ProjectsSection'
+import { SkillsSection } from '../sections/SkillsSection'
 
 export default function HomePage() {
   return (
@@ -16,7 +16,8 @@ export default function HomePage() {
       <SkillsSection />
       <ProjectsSection />
       <MyJourneySection />
+      <CertificateSection />
       <ContactSection />
     </>
-  );
+  )
 }

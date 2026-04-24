@@ -6,6 +6,7 @@ import { PortfolioData } from "@/types/portfolio";
 import { PROJECTS_DATA } from "@/uiPages/home/data/projects";
 import { EDUCATION, EXPERIENCE } from "@/uiPages/home/data/edex";
 import { SKILLS_DATA } from "@/uiPages/home/data/skills";
+import { CERTIFICATES_DATA } from "@/uiPages/home/data/certificates";
 
 const fallbackData: PortfolioData = {
   projects: PROJECTS_DATA as any,
@@ -20,6 +21,7 @@ const fallbackData: PortfolioData = {
   education: EDUCATION as any,
   experience: EXPERIENCE as any,
   technologies: [],
+  certificates: CERTIFICATES_DATA,
 };
 
 export const usePortfolio = () => {

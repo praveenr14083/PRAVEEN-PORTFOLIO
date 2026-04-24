@@ -75,9 +75,19 @@ const technologySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Certificate Schema
+const certificateSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    image: { url: String, public_id: String },
+  },
+  { timestamps: true }
+);
+
 export const Project = mongoose.models.Project || mongoose.model("Project", projectSchema);
 export const Resume = mongoose.models.Resume || mongoose.model("Resume", resumeSchema);
 export const Skill = mongoose.models.Skill || mongoose.model("Skill", skillSchema);
 export const Education = mongoose.models.Education || mongoose.model("Education", educationSchema);
 export const Experience = mongoose.models.Experience || mongoose.model("Experience", experienceSchema);
 export const Technology = mongoose.models.Technology || mongoose.model("Technology", technologySchema);
+export const Certificate = mongoose.models.Certificate || mongoose.model("Certificate", certificateSchema);

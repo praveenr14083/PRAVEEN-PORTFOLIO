@@ -64,6 +64,12 @@ export interface Technology {
   category: "frontend" | "backend" | "database" | "tools";
 }
 
+export interface Certificate {
+  _id: string;
+  name: string;
+  image: { url: string; public_id: string };
+}
+
 export interface PortfolioData {
   projects: Project[];
   resume: Resume | null;
@@ -71,9 +77,16 @@ export interface PortfolioData {
   education: Education[];
   experience: Experience[];
   technologies: Technology[];
+  certificates: Certificate[];
 }
 
 // --- UI / Component Types ---
+
+export interface UICertificate {
+  id: string;
+  name: string;
+  image: string;
+}
 
 export type ProjectCategory = "All" | "Frontend" | "Fullstack" | "AI" | string;
 
