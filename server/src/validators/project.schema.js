@@ -45,4 +45,5 @@ export const projectSchema = z.object({
     .optional()
     .or(z.literal(""))
     .transform((val) => val || undefined),
+  removeImage: z.string().optional(),
 });

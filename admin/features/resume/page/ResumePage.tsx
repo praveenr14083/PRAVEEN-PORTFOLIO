@@ -1,14 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Download, Eye, Trash2, Loader2 } from "lucide-react"
-import { ReplaceResumeModal } from "../components/ReplaceResumeModal"
-import { useResume, useDeleteResume } from "../hooks/useResume"
-import { Skeleton } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 import { NotFound } from "@/components/common/NotFound"
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Eye, Loader2, Trash2 } from "lucide-react"
+import { useState } from "react"
+import { ReplaceResumeModal } from "../components/ReplaceResumeModal"
+import { useDeleteResume, useResume } from "../hooks/useResume"
 
 export default function ResumePage() {
   const { data: resume, isLoading } = useResume()
@@ -68,7 +68,7 @@ export default function ResumePage() {
               <iframe
                 key={resume.file.url}
                 src={resume.file.url}
-                className="h-full w-full rounded-md border bg-white shadow-md"
+                className="h-full w-full rounded-md"
                 title="Resume PDF Preview"
               />
             </div>

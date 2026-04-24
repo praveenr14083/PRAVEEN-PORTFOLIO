@@ -53,6 +53,7 @@ export function EditTechnologyModal({
 
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [removeIcon, setRemoveIcon] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { mutate: updateTechnologyDetails, isPending } = useUpdateTechnology()
@@ -67,8 +68,10 @@ export function EditTechnologyModal({
       })
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
+        setRemoveIcon(false)
       } else {
         setPreviewUrl("")
+        setRemoveIcon(false)
       }
       setIconFile(null)
       setErrors({})
@@ -80,6 +83,7 @@ export function EditTechnologyModal({
     if (file) {
       setIconFile(file)
       setPreviewUrl(URL.createObjectURL(file))
+      setRemoveIcon(false)
     }
   }
 
@@ -97,7 +101,11 @@ export function EditTechnologyModal({
       })
       if (iconFile) {
         submitData.append("icon", iconFile)
+      } else if (removeIcon) {
+        submitData.append("removeIcon", "true")
       }
+
+      console.log('Frontend: Submitting FormData for technology:', Array.from((submitData as any).entries()))
 
       updateTechnologyDetails(
         { id: technology._id, formData: submitData },
@@ -129,8 +137,10 @@ export function EditTechnologyModal({
       })
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
+        setRemoveIcon(false)
       } else {
         setPreviewUrl("")
+        setRemoveIcon(false)
       }
       setIconFile(null)
       setErrors({})
@@ -216,6 +226,7 @@ export function EditTechnologyModal({
                       e.stopPropagation()
                       setIconFile(null)
                       setPreviewUrl("")
+                      setRemoveIcon(true)
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >

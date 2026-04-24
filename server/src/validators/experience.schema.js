@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const experienceSchema = z
   .object({
-    role: z.string().min(2, "Role is required"),
-    company: z.string().min(2, "Company name is required"),
-    location: z.string().optional(),
+    role: z.string().min(1, "Role is required"),
+    company: z.string().min(1, "Company name is required"),
+    location: z.string().optional().nullable(),
     employmentType: z.enum([
       "Full-Time",
       "Part-Time",
@@ -12,9 +12,9 @@ export const experienceSchema = z
       "Contract",
       "Freelance",
     ]),
-    description: z.string().optional(),
-    startDate: z.string(),
-    endDate: z.string().optional(),
+    description: z.string().optional().nullable(),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional().nullable(),
     isCurrent: z.boolean().optional().default(false),
   })
   .refine(

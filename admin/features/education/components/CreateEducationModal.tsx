@@ -1,18 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -21,13 +19,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus, Loader2 } from "lucide-react"
-import { useCreateEducation } from "../hooks/useEducation"
-import { educationSchema, EducationInput } from "../validation/education.validation"
-import { ZodError } from "zod"
+import { Loader2, Plus } from "lucide-react"
+import React, { useState } from "react"
 import { toast } from "sonner"
-
-
+import { ZodError } from "zod"
+import { useCreateEducation } from "../hooks/useEducation"
+import {
+  EducationInput,
+  educationSchema,
+} from "../validation/education.validation"
 
 export function CreateEducationModal() {
   const [open, setOpen] = useState(false)
@@ -52,7 +52,7 @@ export function CreateEducationModal() {
     try {
       const dataToParse = {
         ...formData,
-        endDate: formData.isCurrent ? null : (formData.endDate || null)
+        endDate: formData.isCurrent ? null : formData.endDate || null,
       }
       educationSchema.parse(dataToParse)
 
@@ -221,7 +221,7 @@ export function CreateEducationModal() {
                   setFormData({ ...formData, gradeType: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

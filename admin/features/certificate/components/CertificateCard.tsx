@@ -28,19 +28,28 @@ export function CertificateCard({
   return (
     <Card className="group overflow-hidden p-4">
       {/* Image Section */}
-      {certificate.image?.url && (
-        <div
-          className="relative h-48 w-full overflow-hidden bg-gray-100"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+      <div
+        className="relative h-48 w-full overflow-hidden rounded-lg bg-muted"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {certificate.image?.url ? (
           <img
             src={certificate.image.url}
             alt={certificate.name || "Certificate"}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-        </div>
-      )}
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-muted/50">
+             <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <div className="h-12 w-12 rounded-full bg-muted p-3">
+                <Pen className="h-full w-full stroke-[1.5px]" />
+              </div>
+              <span className="text-xs font-medium opacity-50 uppercase tracking-wider">No Certificate Image</span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Content Section */}
       <CardContent className="px-0">

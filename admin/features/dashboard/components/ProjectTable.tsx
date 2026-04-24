@@ -28,6 +28,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import {
+  FolderKanban,
   MoreHorizontal,
   ExternalLink,
   Search,
@@ -92,8 +93,8 @@ export function ProjectTable({ data }: Props) {
                 className="h-10 w-10 rounded-md object-cover"
               />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
-                <span className="text-xs text-muted-foreground">No img</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted/50 border border-muted">
+                <FolderKanban className="h-5 w-5 text-muted-foreground opacity-50" />
               </div>
             )}
             <span className="font-medium">{project.title}</span>

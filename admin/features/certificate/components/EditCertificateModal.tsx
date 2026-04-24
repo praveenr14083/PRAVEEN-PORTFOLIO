@@ -1,26 +1,35 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { X, Upload, Loader2 } from "lucide-react"
-import { useUpdateCertificate } from "../hooks/useCertificates"
-import { certificateSchema, CertificateInput } from "../validation/certificate.validation"
-import { ZodError } from "zod"
+import { Loader2, Upload, X } from "lucide-react"
+import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useUpdateCertificate } from "../hooks/useCertificates"
+import {
+  CertificateInput,
+  certificateSchema,
+} from "../validation/certificate.validation"
 
 type EditCertificateModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  certificate?: (CertificateInput & { _id: string, image?: { url: string; public_id: string } }) | any | null
+  certificate?:
+    | (CertificateInput & {
+        _id: string
+        image?: { url: string; public_id: string }
+      })
+    | any
+    | null
 }
 
 export function EditCertificateModal({
@@ -34,6 +43,7 @@ export function EditCertificateModal({
 
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [removeImage, setRemoveImage] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { mutate: updateCertificateDetails, isPending } = useUpdateCertificate()
@@ -45,8 +55,10 @@ export function EditCertificateModal({
       })
       if (certificate.image?.url) {
         setPreviewUrl(certificate.image.url)
+        setRemoveImage(false)
       } else {
         setPreviewUrl("")
+        setRemoveImage(false)
       }
       setImageFile(null)
       setErrors({})
@@ -58,6 +70,7 @@ export function EditCertificateModal({
     if (file) {
       setImageFile(file)
       setPreviewUrl(URL.createObjectURL(file))
+      setRemoveImage(false)
     }
   }
 
@@ -68,20 +81,27 @@ export function EditCertificateModal({
     setErrors({})
     try {
       certificateSchema.parse(formData)
-      
+
       const submitData = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, String(value))
       })
       if (imageFile) {
         submitData.append("image", imageFile)
+      } else if (removeImage) {
+        submitData.append("removeImage", "true")
       }
-      
-      updateCertificateDetails({ id: certificate._id, formData: submitData }, {
-        onSuccess: () => {
-          onOpenChange(false)
+
+      console.log('Frontend: Submitting FormData for certificate:', Array.from((submitData as any).entries()))
+
+      updateCertificateDetails(
+        { id: certificate._id, formData: submitData },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
         }
-      })
+      )
     } catch (err) {
       if (err instanceof ZodError) {
         const fieldErrors: Record<string, string> = {}
@@ -103,8 +123,10 @@ export function EditCertificateModal({
       })
       if (certificate.image?.url) {
         setPreviewUrl(certificate.image.url)
+        setRemoveImage(false)
       } else {
         setPreviewUrl("")
+        setRemoveImage(false)
       }
       setImageFile(null)
       setErrors({})
@@ -133,7 +155,9 @@ export function EditCertificateModal({
               }
               placeholder="e.g., AWS Certified Solutions Architect"
             />
-            {errors.name && <span className="text-sm text-red-500">{errors.name}</span>}
+            {errors.name && (
+              <span className="text-sm text-red-500">{errors.name}</span>
+            )}
           </div>
 
           {/* Image Upload */}
@@ -166,6 +190,7 @@ export function EditCertificateModal({
                       e.stopPropagation()
                       setImageFile(null)
                       setPreviewUrl("")
+                      setRemoveImage(true)
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
@@ -199,8 +224,8 @@ export function EditCertificateModal({
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-               Update Certificate
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Certificate
             </Button>
           </div>
         </form>

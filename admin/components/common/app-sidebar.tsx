@@ -108,7 +108,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-500/80 active:bg-red-500/80"
+              className="bg-red-500 text-white hover:bg-red-500/80 active:bg-red-500/80"
             >
               <LogOut />
               <span>{!isCollapsed && "Logout"}</span>

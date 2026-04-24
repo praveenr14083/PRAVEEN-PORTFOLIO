@@ -1,14 +1,13 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -20,12 +19,14 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Loader2 } from "lucide-react"
-import { useUpdateEducation } from "../hooks/useEducation"
-import { educationSchema, EducationInput } from "../validation/education.validation"
-import { ZodError } from "zod"
+import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
-
-
+import { ZodError } from "zod"
+import { useUpdateEducation } from "../hooks/useEducation"
+import {
+  EducationInput,
+  educationSchema,
+} from "../validation/education.validation"
 
 type EditEducationModalProps = {
   open: boolean
@@ -68,7 +69,8 @@ export function EditEducationModal({
         endDate: formatDateForInput(education.endDate),
         isCurrent: education.isCurrent || false,
         grade: education.grade || "",
-        gradeType: (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
+        gradeType:
+          (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
       })
       setErrors({})
     }
@@ -82,7 +84,7 @@ export function EditEducationModal({
     try {
       const dataToParse = {
         ...formData,
-        endDate: formData.isCurrent ? null : (formData.endDate || null),
+        endDate: formData.isCurrent ? null : formData.endDate || null,
       }
       educationSchema.parse(dataToParse)
 
@@ -118,7 +120,8 @@ export function EditEducationModal({
         endDate: formatDateForInput(education.endDate),
         isCurrent: education.isCurrent || false,
         grade: education.grade || "",
-        gradeType: (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
+        gradeType:
+          (education.gradeType as "CGPA" | "Percentage" | "GPA") || "CGPA",
       })
       setErrors({})
     }
@@ -249,7 +252,7 @@ export function EditEducationModal({
                   setFormData({ ...formData, gradeType: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

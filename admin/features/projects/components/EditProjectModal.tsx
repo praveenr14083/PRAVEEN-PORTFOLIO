@@ -1,17 +1,15 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -20,16 +18,24 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { X, Upload, Loader2 } from "lucide-react"
-import { useUpdateProject } from "../hooks/useProjects"
-import { projectSchema, ProjectInput } from "../validation/project.validation"
-import { ZodError } from "zod"
+import { Textarea } from "@/components/ui/textarea"
+import { Loader2, Upload, X } from "lucide-react"
+import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useUpdateProject } from "../hooks/useProjects"
+import { ProjectInput, projectSchema } from "../validation/project.validation"
 
 type EditProjectModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  project?: (ProjectInput & { _id: string, image?: { url: string; public_id: string } }) | any | null
+  project?:
+    | (ProjectInput & {
+        _id: string
+        image?: { url: string; public_id: string }
+      })
+    | any
+    | null
 }
 
 export function EditProjectModal({
@@ -50,6 +56,7 @@ export function EditProjectModal({
 
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string>("")
+  const [removeImage, setRemoveImage] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { mutate: updateProjectDetails, isPending } = useUpdateProject()
@@ -68,7 +75,9 @@ export function EditProjectModal({
       setFormData({
         title: project.title || "",
         description: project.description || "",
-        technologies: Array.isArray(project.technologies) ? project.technologies.join(", ") : project.technologies || "",
+        technologies: Array.isArray(project.technologies)
+          ? project.technologies.join(", ")
+          : project.technologies || "",
         category: project.category || "Other",
         status: project.status || "draft",
         featured: project.featured || false,
@@ -77,8 +86,10 @@ export function EditProjectModal({
       })
       if (project.image?.url) {
         setPreviewUrl(project.image.url)
+        setRemoveImage(false)
       } else {
         setPreviewUrl("")
+        setRemoveImage(false)
       }
       setImageFile(null)
       setErrors({})
@@ -90,6 +101,7 @@ export function EditProjectModal({
     if (file) {
       setImageFile(file)
       setPreviewUrl(URL.createObjectURL(file))
+      setRemoveImage(false)
     }
   }
 
@@ -100,24 +112,31 @@ export function EditProjectModal({
     setErrors({})
     try {
       projectSchema.parse(formData)
-      
+
       const submitData = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, String(value))
       })
       if (imageFile) {
         submitData.append("image", imageFile)
+      } else if (removeImage) {
+        submitData.append("removeImage", "true")
       }
-      
-      updateProjectDetails({ id: project._id, formData: submitData }, {
-        onSuccess: () => {
-          onOpenChange(false)
+
+      console.log('Frontend: Submitting FormData with entries:', Array.from((submitData as any).entries()))
+
+      updateProjectDetails(
+        { id: project._id, formData: submitData },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+          },
         }
-      })
+      )
     } catch (err) {
       if (err instanceof ZodError) {
         const fieldErrors: Record<string, string> = {}
-        err.issues.forEach(e => {
+        err.issues.forEach((e) => {
           if (e.path[0]) {
             fieldErrors[e.path[0].toString()] = e.message
           }
@@ -133,7 +152,9 @@ export function EditProjectModal({
       setFormData({
         title: project.title || "",
         description: project.description || "",
-        technologies: Array.isArray(project.technologies) ? project.technologies.join(", ") : project.technologies || "",
+        technologies: Array.isArray(project.technologies)
+          ? project.technologies.join(", ")
+          : project.technologies || "",
         category: project.category || "Other",
         status: project.status || "draft",
         featured: project.featured || false,
@@ -142,8 +163,10 @@ export function EditProjectModal({
       })
       if (project.image?.url) {
         setPreviewUrl(project.image.url)
+        setRemoveImage(false)
       } else {
         setPreviewUrl("")
+        setRemoveImage(false)
       }
       setImageFile(null)
       setErrors({})
@@ -172,7 +195,9 @@ export function EditProjectModal({
               }
               placeholder="Enter project title"
             />
-            {errors.title && <span className="text-sm text-red-500">{errors.title}</span>}
+            {errors.title && (
+              <span className="text-sm text-red-500">{errors.title}</span>
+            )}
           </div>
 
           {/* Description */}
@@ -187,7 +212,9 @@ export function EditProjectModal({
               placeholder="Enter project description"
               rows={4}
             />
-            {errors.description && <span className="text-sm text-red-500">{errors.description}</span>}
+            {errors.description && (
+              <span className="text-sm text-red-500">{errors.description}</span>
+            )}
           </div>
 
           {/* Category */}
@@ -223,7 +250,11 @@ export function EditProjectModal({
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />
-            {errors.technologies && <span className="text-sm text-red-500">{errors.technologies}</span>}
+            {errors.technologies && (
+              <span className="text-sm text-red-500">
+                {errors.technologies}
+              </span>
+            )}
           </div>
 
           {/* Live URL */}
@@ -284,6 +315,7 @@ export function EditProjectModal({
                       e.stopPropagation()
                       setImageFile(null)
                       setPreviewUrl("")
+                      setRemoveImage(true)
                     }}
                     className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >

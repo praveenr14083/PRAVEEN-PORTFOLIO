@@ -10,10 +10,15 @@ export interface Resume {
 }
 
 export const getResume = async (): Promise<Resume | null> => {
-  const { data } = await api.get("/resume");
-  // Assuming backend returns an array or a single object. 
-  // Standard is usually an array of one if it's a singleton pattern in MongoDB.
-  return Array.isArray(data.data) ? data.data[0] || null : data.data || null;
+  try {
+    const { data } = await api.get("/resume");
+    return Array.isArray(data.data) ? data.data[0] || null : data.data || null;
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 };
 
 export const updateResume = async (formData: FormData): Promise<Resume> => {

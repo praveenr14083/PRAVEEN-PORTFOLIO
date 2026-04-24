@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Pen, Trash } from "lucide-react"
+import { PanelsTopLeft, Pen, Trash } from "lucide-react"
 
 type TechnologyCardProps = {
   technology: {
@@ -35,7 +35,9 @@ export function TechnologyCard({
               className="h-full w-full object-contain drop-shadow-md"
             />
           ) : (
-            <div className="h-full w-full rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20" />
+            <div className="flex h-full w-full items-center justify-center">
+              <PanelsTopLeft className="h-8 w-8 text-muted-foreground opacity-20" />
+            </div>
           )}
         </div>
       </CardHeader>
