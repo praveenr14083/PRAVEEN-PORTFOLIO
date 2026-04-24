@@ -1,5 +1,6 @@
 import * as projectService from '../services/project.service.js'
 import { errorResponse, successResponse } from '../utils/apiResponse.js'
+import logger from '../utils/logger.js'
 
 export const createProject = async (req, res, next) => {
   try {
@@ -47,7 +48,7 @@ export const updateProject = async (req, res, next) => {
     if (req.file) {
       data.image = { url: req.file.path, public_id: req.file.filename }
     } else if (req.body.removeImage === 'true') {
-      console.log('Backend Controller: Detected removeImage flag')
+      logger.debug(`Project Controller: Detected removeImage flag for project ${req.params.id}`)
       data.image = null
     }
 

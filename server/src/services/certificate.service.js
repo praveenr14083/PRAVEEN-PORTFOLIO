@@ -1,5 +1,6 @@
 import { Certificate } from '../models/certificate.model.js'
 import { deleteFromCloudinary } from '../utils/cloudinary.js'
+import logger from '../utils/logger.js'
 
 export const createCertificate = async (data) => {
   return await Certificate.create(data)
@@ -19,15 +20,15 @@ export const updateCertificate = async (id, data) => {
 
   // If image is explicitly set to null (removal) or a new one is uploaded, delete the old one
   if (data.image !== undefined && cert.image?.public_id) {
-    console.log('Certificate Service: Checking image update for cert', id, 'New image data:', data.image)
+    logger.debug(`Certificate Service: Checking image update for cert ${id}, new image: %o`, data.image)
     if (data.image === null || data.image.public_id !== cert.image.public_id) {
-      console.log('Certificate Service: Deleting old image from Cloudinary', cert.image.public_id)
+      logger.debug(`Certificate Service: Deleting old image from Cloudinary [${cert.image.public_id}]`)
       await deleteFromCloudinary(cert.image.public_id)
     }
   }
 
   if (data.image === null) {
-    console.log('Certificate Service: Removing image from DB using $unset')
+    logger.debug('Certificate Service: Removing image from DB using $unset')
     const { image, ...updateData } = data
     return await Certificate.findByIdAndUpdate(id, { ...updateData, $unset: { image: 1 } }, { new: true })
   }

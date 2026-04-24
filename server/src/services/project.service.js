@@ -1,5 +1,6 @@
 import Project from '../models/project.model.js'
 import { deleteFromCloudinary } from '../utils/cloudinary.js'
+import logger from '../utils/logger.js'
 
 export const createProject = async (data) => {
   return await Project.create(data)
@@ -24,15 +25,15 @@ export const updateProject = async (id, data) => {
 
   // If a new image is being uploaded or image is being removed (data.image is null), delete the old one
   if (data.image !== undefined && project.image?.public_id) {
-    console.log('Project Service: Checking image update for project', id, 'New image data:', data.image)
+    logger.debug(`Project Service: Checking image update for project ${id}, new image: %o`, data.image)
     if (data.image === null || data.image.public_id !== project.image.public_id) {
-      console.log('Project Service: Deleting old image from Cloudinary', project.image.public_id)
+      logger.debug(`Project Service: Deleting old image from Cloudinary [${project.image.public_id}]`)
       await deleteFromCloudinary(project.image.public_id)
     }
   }
 
   if (data.image === null) {
-    console.log('Project Service: Removing image from DB using $unset')
+    logger.debug('Project Service: Removing image from DB using $unset')
     const { image, ...updateData } = data
     return await Project.findByIdAndUpdate(id, { ...updateData, $unset: { image: 1 } }, { new: true })
   }

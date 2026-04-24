@@ -1,5 +1,6 @@
 import { Resume } from "../models/resume.model.js";
 import { deleteFromCloudinary } from "../utils/cloudinary.js";
+import logger from "../utils/logger.js";
 
 // Upload or Replace Resume
 export const uploadResume = async (fileData) => {
@@ -27,17 +28,17 @@ export const deleteResume = async () => {
   const resume = await Resume.findOne();
 
   if (!resume) {
-    console.warn("No resume found to delete");
+    logger.warn("Resume Service: No resume found to delete");
     return null;
   }
 
   if (resume.file?.public_id) {
-    console.log("Deleting from Cloudinary:", resume.file.public_id);
+    logger.debug(`Resume Service: Deleting from Cloudinary [${resume.file.public_id}]`);
 
     try {
       await deleteFromCloudinary(resume.file.public_id, "raw"); // ✅ FIX
     } catch (err) {
-      console.error("Cloudinary deletion failed:", err.message);
+      logger.error(`Resume Service: Cloudinary deletion failed — ${err.message}`);
       throw err;
     }
   }

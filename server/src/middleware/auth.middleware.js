@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
+import logger from "../utils/logger.js";
 
 dotenv.config();
 
@@ -18,18 +19,18 @@ try {
       credential: admin.credential.cert(serviceAccountParams),
     });
     isFirebaseInitialized = true;
-    console.log("Firebase Admin SDK initialized successfully");
+    logger.info("Firebase Admin SDK initialized successfully");
   } else {
-    console.log("Firebase Admin SDK check: credentials missing (not initialized).");
+    logger.warn("Firebase Admin SDK check: credentials missing (not initialized).");
   }
 } catch (error) {
-  console.log("Firebase Admin SDK initialize error:", error);
+  logger.error("Firebase Admin SDK initialize error:", { stack: error.stack });
 }
 
 export const verifyAdmin = async (req, res, next) => {
   if (!isFirebaseInitialized) {
     // If not initialized, throw error.
-    console.warn("Auth bypass: Firebase not configured. Ensure ENV vars are set.");
+    logger.warn("Auth bypass: Firebase not configured. Ensure ENV vars are set.");
     return res.status(500).json({ success: false, message: "Server misconfiguration: Firebase not initialized." });
   }
 

@@ -1,5 +1,6 @@
 import { Technology } from '../models/technology.model.js'
 import { deleteFromCloudinary } from '../utils/cloudinary.js'
+import logger from '../utils/logger.js'
 
 export const createTechnology = async (data) => {
   return await Technology.create(data)
@@ -19,15 +20,15 @@ export const updateTechnology = async (id, data) => {
 
   // Delete old icon if new one uploaded or icon is being removed
   if (data.icon !== undefined && tech.icon?.public_id) {
-    console.log('Technology Service: Checking icon update for tech', id, 'New icon data:', data.icon)
+    logger.debug(`Technology Service: Checking icon update for tech ${id}, new icon: %o`, data.icon)
     if (data.icon === null || data.icon.public_id !== tech.icon.public_id) {
-      console.log('Technology Service: Deleting old icon from Cloudinary', tech.icon.public_id)
+      logger.debug(`Technology Service: Deleting old icon from Cloudinary [${tech.icon.public_id}]`)
       await deleteFromCloudinary(tech.icon.public_id)
     }
   }
 
   if (data.icon === null) {
-    console.log('Technology Service: Removing icon from DB using $unset')
+    logger.debug('Technology Service: Removing icon from DB using $unset')
     const { icon, ...updateData } = data
     return await Technology.findByIdAndUpdate(id, { ...updateData, $unset: { icon: 1 } }, { new: true })
   }

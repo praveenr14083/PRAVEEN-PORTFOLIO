@@ -1,5 +1,6 @@
 import * as resumeService from "../services/resume.service.js";
 import { successResponse, errorResponse } from "../utils/apiResponse.js";
+import logger from "../utils/logger.js";
 
 export const uploadResume = async (req, res) => {
   try {
@@ -14,13 +15,13 @@ export const uploadResume = async (req, res) => {
       public_id: req.file.filename, // This includes 'portfolio_resumes/...'
     };
 
-    console.log("Uploading file:", fileData);
+    logger.debug("Resume Controller: Uploading file to Cloudinary: %o", fileData);
 
     const resume = await resumeService.uploadResume(fileData);
 
     return successResponse(res, resume, "Resume uploaded successfully");
   } catch (error) {
-    console.error("Upload error:", error);
+    logger.error(`Resume Controller: Upload error — ${error.message}`, { stack: error.stack });
     return errorResponse(res, error.message || "Upload failed", 500);
   }
 };
@@ -49,7 +50,7 @@ export const deleteResume = async (req, res) => {
 
     return successResponse(res, null, "Resume deleted successfully");
   } catch (error) {
-    console.error("Delete resume error:", error);
+    logger.error(`Resume Controller: Delete error — ${error.message}`, { stack: error.stack });
     return errorResponse(res, error.message || "Failed to delete resume", 500);
   }
 };
