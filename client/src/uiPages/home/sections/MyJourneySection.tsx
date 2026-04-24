@@ -19,29 +19,27 @@ export function MyJourneySection() {
   };
 
   const displayExperience = useMemo(() => {
-    return fetchedExp && fetchedExp.length > 0
-      ? fetchedExp.map((exp: any) => ({
-          id: exp._id?.toString() || exp.id,
-          title: exp.role,
-          description: exp.company,
-          year: `${formatDate(exp.startDate)} - ${exp.isCurrent ? 'Present' : formatDate(exp.endDate)}`,
-          isCurrent: exp.isCurrent,
-          icon: ICON_MAP[exp.icon] || Code
-        }))
-      : EXPERIENCE;
+    const dataToDisplay = fetchedExp && fetchedExp.length > 0 ? fetchedExp : EXPERIENCE;
+    return dataToDisplay.map((exp: any) => ({
+      id: exp._id?.toString() || exp.id,
+      title: exp.role,
+      description: exp.company,
+      year: `${formatDate(exp.startDate)} - ${exp.isCurrent ? 'Present' : formatDate(exp.endDate)}`,
+      isCurrent: exp.isCurrent,
+      icon: ICON_MAP[exp.icon] || Code
+    }));
   }, [fetchedExp]);
 
   const displayEducation = useMemo(() => {
-    return fetchedEdu && fetchedEdu.length > 0
-      ? fetchedEdu.map((edu: any) => ({
-          id: edu._id?.toString() || edu.id,
-          title: edu.degree,
-          description: edu.institute,
-          year: `${formatDate(edu.startDate)} - ${edu.isCurrent ? 'Present' : formatDate(edu.endDate)}`,
-          isCurrent: edu.isCurrent,
-          icon: ICON_MAP[edu.icon] || GraduationCap
-        }))
-      : EDUCATION;
+    const dataToDisplay = fetchedEdu && fetchedEdu.length > 0 ? fetchedEdu : EDUCATION;
+    return dataToDisplay.map((edu: any) => ({
+      id: edu._id?.toString() || edu.id,
+      title: edu.degree,
+      description: edu.institute,
+      year: `${formatDate(edu.startDate)} - ${edu.isCurrent ? 'Present' : formatDate(edu.endDate)}`,
+      isCurrent: edu.isCurrent,
+      icon: ICON_MAP[edu.icon] || GraduationCap
+    }));
   }, [fetchedEdu]);
   return (
     <section id="journey" className="section-fullscreen bg-background">

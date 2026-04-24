@@ -1,66 +1,65 @@
-"use client";
-import React, { useMemo, useState } from "react";
-import { ProjectCard } from "../components/ProjectCard";
-import { cn } from "@/lib/utils";
-import { Project } from "../data/projects";
-import { usePortfolio } from "@/hooks/usePortfolio";
+'use client'
+import { usePortfolio } from '@/hooks/usePortfolio'
+import { cn } from '@/lib/utils'
+import { UIProject } from '@/types/portfolio'
+import { useMemo, useState } from 'react'
+import { ProjectCard } from '../components/ProjectCard'
+import { PROJECTS_DATA } from '../data/projects'
 
 type Category = {
-  id: string;
-  name: string;
-  type: string;
-};
+  id: string
+  name: string
+  type: string
+}
 
 export function ProjectsSection() {
-  const [activeCategory, setActiveCategory] = useState("all");
-  const { portfolioData, isLoading, error } = usePortfolio();
-  const { projects: fetchedProjects } = portfolioData;
+  const [activeCategory, setActiveCategory] = useState('all')
+  const { portfolioData, isLoading, error } = usePortfolio()
+  const { projects: fetchedProjects } = portfolioData
 
   const displayProjects = useMemo(() => {
-    return fetchedProjects.map((p: any) => ({
+    const dataToDisplay =
+      fetchedProjects && fetchedProjects.length > 0 ? fetchedProjects : PROJECTS_DATA
+    return dataToDisplay.map((p: any) => ({
       id: p._id || p.id,
       title: p.title,
       description: p.description,
       tech: p.technologies || [],
       demo: p.liveUrl,
       github: p.githubUrl,
-      image: p.image?.url || "https://placehold.co/600x400/png",
-      category: p.category
-    }));
-  }, [fetchedProjects]);
+      image: p.image?.url || 'https://placehold.co/600x400/png',
+      category: p.category,
+    }))
+  }, [fetchedProjects])
 
   // 🔥 Extract unique categories from projects
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Set(displayProjects.map((p: any) => p.category)),
-    ).map((cat: any) => ({
-      id: cat.toLowerCase(),
-      name: cat,
-      type: cat.toLowerCase(),
-    }));
+    const uniqueCategories = Array.from(new Set(displayProjects.map((p: any) => p.category))).map(
+      (cat: any) => ({
+        id: cat.toLowerCase(),
+        name: cat,
+        type: cat.toLowerCase(),
+      })
+    )
 
-    return [{ id: "all", name: "All", type: "all" }, ...uniqueCategories];
-  }, [displayProjects]);
+    return [{ id: 'all', name: 'All', type: 'all' }, ...uniqueCategories]
+  }, [displayProjects])
 
   // 🔥 Filter projects by active category
   const filteredProjects =
-    activeCategory === "all"
+    activeCategory === 'all'
       ? displayProjects
-      : displayProjects.filter(
-          (p: any) => p.category.toLowerCase() === activeCategory,
-        );
+      : displayProjects.filter((p: any) => p.category.toLowerCase() === activeCategory)
 
   return (
     <section id="projects" className="section-fullscreen bg-background py-20">
       <div className="w-full flex flex-col items-center gap-12">
         {/* Header */}
         <div className="flex flex-col items-center justify-center gap-4 text-center">
-          <h1 className="text-2xl lg:text-4xl font-doto font-bold uppercase">
-            Featured Projects
-          </h1>
+          <h1 className="text-2xl lg:text-4xl font-doto font-bold uppercase">Featured Projects</h1>
           <p className="max-w-150 text-md text-muted-foreground text-center">
-            Showcasing innovation and technical expertise across Frontend,
-            Fullstack, and AI domains.
+            Showcasing innovation and technical expertise across Frontend, Fullstack, and AI
+            domains.
           </p>
         </div>
 
@@ -71,10 +70,10 @@ export function ProjectsSection() {
               key={cat.id}
               onClick={() => setActiveCategory(cat.type)}
               className={cn(
-                "px-4 py-1 rounded-full text-sm font-medium transition-all duration-300",
+                'px-4 py-1 rounded-full text-sm font-medium transition-all duration-300',
                 activeCategory === cat.type
-                  ? "bg-primary-color text-white shadow-lg scale-105"
-                  : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+                  ? 'bg-primary-color text-white shadow-lg scale-105'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'
               )}
             >
               {cat.name}
@@ -92,11 +91,11 @@ export function ProjectsSection() {
 
         {/* Projects Grid */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project: Project) => (
+          {filteredProjects.map((project: UIProject) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

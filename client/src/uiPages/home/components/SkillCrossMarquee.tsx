@@ -20,28 +20,34 @@ export function SkillCrossMarquee() {
                 {/* BACK MARQUEE */}
                 <div className="absolute inset-0 skew-4 bg-white text-black py-2">
                     <Marquee speed={40} direction="right" className="h-[2rem]">
-                        {marqueeItems.map((skill, index) => (
-                            <div key={index} className="flex items-center">
-                                <h1 className="font-semibold text-md md:text-xl">
-                                    {skill.name}
-                                </h1>
-                                <Sparkle className="mx-4 w-4 h-4 md:w-5 md:h-5" />
-                            </div>
-                        ))}
+                        {marqueeItems.map((skill, index) => {
+                            const name = typeof skill === 'string' ? skill : (skill as any).name;
+                            return (
+                                <div key={index} className="flex items-center">
+                                    <h1 className="font-semibold text-md md:text-xl">
+                                        {name}
+                                    </h1>
+                                    <Sparkle className="mx-4 w-4 h-4 md:w-5 md:h-5" />
+                                </div>
+                            );
+                        })}
                     </Marquee>
                 </div>
 
                 {/* FRONT MARQUEE */}
                 <div className="relative -skew-4 bg-primary-color py-2">
                     <Marquee speed={60} className="h-[2rem]">
-                        {marqueeItems.map((skill, index) => (
-                            <div key={index} className="flex items-center">
-                                <h1 className="font-semibold text-md md:text-xl">
-                                    {skill.name}
-                                </h1>
-                                <Sparkle className="mx-4 w-4 h-4 md:w-5 md:h-5" />
-                            </div>
-                        ))}
+                        {marqueeItems.map((skill, index) => {
+                            const name = typeof skill === 'string' ? skill : (skill as any).name;
+                            return (
+                                <div key={index} className="flex items-center">
+                                    <h1 className="font-semibold text-md md:text-xl">
+                                        {name}
+                                    </h1>
+                                    <Sparkle className="mx-4 w-4 h-4 md:w-5 md:h-5" />
+                                </div>
+                            );
+                        })}
                     </Marquee>
                 </div>
 

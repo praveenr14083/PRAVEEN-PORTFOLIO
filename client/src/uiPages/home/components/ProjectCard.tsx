@@ -1,11 +1,11 @@
 import React from "react";
 import { Github, ExternalLink, Folder } from "lucide-react";
-import { Project } from "../data/projects";
+import { UIProject } from "@/types/portfolio";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 interface ProjectCardProps {
-  project: Project;
+  project: UIProject;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {

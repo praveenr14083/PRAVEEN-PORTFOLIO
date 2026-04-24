@@ -2,7 +2,25 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { portfolioService } from "@/services/portfolioService";
-import { fallbackData, PortfolioData } from "@/utils/data";
+import { PortfolioData } from "@/types/portfolio";
+import { PROJECTS_DATA } from "@/uiPages/home/data/projects";
+import { EDUCATION, EXPERIENCE } from "@/uiPages/home/data/edex";
+import { SKILLS_DATA } from "@/uiPages/home/data/skills";
+
+const fallbackData: PortfolioData = {
+  projects: PROJECTS_DATA as any,
+  resume: null,
+  skills: SKILLS_DATA.map(s => ({
+    _id: s.title,
+    name: s.title,
+    description: s.description,
+    icon: s.Icon.displayName || "code",
+    technologies: s.skills
+  })),
+  education: EDUCATION as any,
+  experience: EXPERIENCE as any,
+  technologies: [],
+};
 
 export const usePortfolio = () => {
   const query = useQuery<PortfolioData>({

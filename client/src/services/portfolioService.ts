@@ -1,19 +1,14 @@
 import axios from "axios";
-import { PortfolioData, fallbackData } from "@/utils/data";
+import { PortfolioData } from "@/types/portfolio";
 
-const API_URL = "/api/portfolio/data";
+const API_URL = "/api/portfolio";
 
 export const portfolioService = {
   getPortfolioData: async (): Promise<PortfolioData> => {
-    try {
-      const response = await axios.get("/api/portfolio");
-      if (response.data.success) {
-        return response.data.data as PortfolioData;
-      }
-      return fallbackData;
-    } catch (error) {
-      console.error("Portfolio Service Error:", error);
-      return fallbackData;
+    const response = await axios.get(API_URL);
+    if (response.data.success) {
+      return response.data.data as PortfolioData;
     }
+    throw new Error(response.data.message || "Failed to fetch portfolio data");
   },
 };

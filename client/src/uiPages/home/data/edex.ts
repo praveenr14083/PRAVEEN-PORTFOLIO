@@ -1,85 +1,63 @@
-import {
-  GraduationCap,
-  School,
-  University,
-  BookOpen,
-  Briefcase,
-  Code,
-  LucideIcon,
-  Code2,
-} from "lucide-react";
-
-type EdExData = {
-  id: string;
-  year: string;
-  title: string;
-  description: string;
-  percentage?: string;
-  icon: LucideIcon;
-};
-
-export const EDUCATION: EdExData[] = [
+export const EDUCATION = [
   {
-    id: "gen-ai",
-    title: "Gen AI Fullstack Development",
-    description: "Karka Software Academy, Nagercoil.",
-    year: "Nov 2025- Feb 2026",
-    icon: Code2, // Degree
+    _id: "edu-1",
+    degree: "Gen AI Fullstack Development",
+    institute: "Karka Software Academy",
+    location: "Nagercoil",
+    startDate: "2025-11-01",
+    endDate: null,
+    isCurrent: true,
+    icon: "Code2"
   },
   {
-    id: "bsc",
-    title: "B.Sc. Computer Science",
-    description: "Pioneer Kumaraswamy College, Nagercoil.",
-    year: "2022-2025",
-    percentage: "CGPA: 7.34",
-    icon: GraduationCap, // Degree
+    _id: "edu-2",
+    degree: "B.Sc. Computer Science",
+    institute: "Pioneer Kumaraswamy College",
+    location: "Nagercoil",
+    startDate: "2022-06-01",
+    endDate: "2025-05-30",
+    isCurrent: false,
+    grade: "7.34",
+    gradeType: "CGPA",
+    icon: "GraduationCap"
   },
   {
-    id: "dme",
-    title: "Diploma in Mechanical Engineering",
-    description: "Govt Polytechnic College, Konam, Nagercoil.",
-    year: "2020-2022",
-    percentage: "90%",
-    icon: University, // Polytechnic / College
-  },
-  {
-    id: "hsc",
-    title: "HSC",
-    description: "DVD Higher Secondary School, Nagercoil.",
-    year: "2019-2020",
-    percentage: "82%",
-    icon: School, // School
-  },
-  {
-    id: "sslc",
-    title: "SSLC",
-    description: "SMRV Higher Secondary School, Nagercoil.",
-    year: "2017-2018",
-    percentage: "73.2%",
-    icon: BookOpen, // Foundation education
-  },
+    _id: "edu-3",
+    degree: "Diploma in Mechanical Engineering",
+    institute: "Govt Polytechnic College",
+    location: "Konam, Nagercoil",
+    startDate: "2020-06-01",
+    endDate: "2022-05-30",
+    isCurrent: false,
+    grade: "90%",
+    gradeType: "Percentage",
+    icon: "University"
+  }
 ];
 
-export const EXPERIENCE: EdExData[] = [
+export const EXPERIENCE = [
   {
-    id: "open-purpl",
-    title: "Frontend Developer",
-    description: "Open Purpl",
-    year: "Dec 2025 - Feb 2026",
-    icon: Code, // Dev role
+    _id: "exp-1",
+    role: "Frontend Developer",
+    company: "Open Purpl",
+    location: "Remote",
+    employmentType: "Internship",
+    description: "Working on modern web applications using React and Tailwind CSS.",
+    startDate: "2025-12-01",
+    endDate: null,
+    isCurrent: true,
+    icon: "Code"
   },
   {
-    id: "jas-digicraft-tek",
-    title: "React Developer Intern",
-    description: "JAS DigicraftTek",
-    year: "Jan 2025 - Feb 2026",
-    icon: Code, // Dev role
-  },
-  {
-    id: "g-tec",
-    title: "Python Internship (20 Days)",
-    description: "G-Tec Computer Education Institute",
-    year: "Dec 2024 - Jan 2025",
-    icon: Briefcase, // Internship / Work
-  },
+    _id: "exp-2",
+    role: "React Developer Intern",
+    company: "JAS DigicraftTek",
+    location: "Nagercoil",
+    employmentType: "Internship",
+    description: "Developing responsive UI components and integrating APIs.",
+    startDate: "2025-01-01",
+    endDate: "2026-02-01",
+    isCurrent: false,
+    icon: "Code"
+  }
 ];

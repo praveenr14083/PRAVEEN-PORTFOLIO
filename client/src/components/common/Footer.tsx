@@ -38,14 +38,17 @@ export function Footer() {
       {/* ✅ Marquee Using Local Skills Array */}
       <div className="relative border-dashed border-t border-b border-gray-400/20 py-4 italic overflow-hidden">
         <Marquee className="w-full h-[6rem]">
-          {displaySkills.map((skill, index) => (
-            <h1
-              key={index}
-              className="font-semibold text-4xl md:text-7xl flex items-center pl-10 md:pl-20"
-            >
-              {skill.name}
-            </h1>
-          ))}
+          {displaySkills.map((skill, index) => {
+            const name = typeof skill === 'string' ? skill : (skill as any).name;
+            return (
+              <h1
+                key={index}
+                className="font-semibold text-4xl md:text-7xl flex items-center pl-10 md:pl-20"
+              >
+                {name}
+              </h1>
+            );
+          })}
         </Marquee>
       </div>
 
