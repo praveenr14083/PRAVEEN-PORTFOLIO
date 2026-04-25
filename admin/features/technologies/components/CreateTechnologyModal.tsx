@@ -24,17 +24,18 @@ import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useCreateTechnology } from "../hooks/useTechnologies"
 import { technologySchema } from "../validation/technology.validation"
+import { CATEGORIES } from "@/lib/constants"
 
 type TechnologyFormData = {
   name: string
-  category: "frontend" | "backend" | "database" | "tools"
+  category: string
 }
 
 export function CreateTechnologyModal() {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState<TechnologyFormData>({
     name: "",
-    category: "frontend",
+    category: CATEGORIES[0],
   })
 
   const [iconFile, setIconFile] = useState<File | null>(null)
@@ -43,7 +44,7 @@ export function CreateTechnologyModal() {
 
   const { mutate: createTechnology, isPending } = useCreateTechnology()
 
-  const categories = ["frontend", "backend", "database", "tools"]
+  const categories = CATEGORIES
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -92,7 +93,7 @@ export function CreateTechnologyModal() {
   const resetForm = () => {
     setFormData({
       name: "",
-      category: "frontend",
+      category: CATEGORIES[0],
     })
     setIconFile(null)
     setPreviewUrl("")
@@ -147,7 +148,7 @@ export function CreateTechnologyModal() {
               <SelectContent>
                 {categories.map((cat) => (
                   <SelectItem key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat}
                   </SelectItem>
                 ))}
               </SelectContent>

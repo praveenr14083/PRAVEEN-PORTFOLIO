@@ -1,18 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -21,11 +19,16 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Plus, Loader2 } from "lucide-react"
-import { useCreateExperience } from "../hooks/useExperience"
-import { experienceSchema, ExperienceInput } from "../validation/experience.validation"
-import { ZodError } from "zod"
+import { Textarea } from "@/components/ui/textarea"
+import { Loader2, Plus } from "lucide-react"
+import React, { useState } from "react"
 import { toast } from "sonner"
+import { ZodError } from "zod"
+import { useCreateExperience } from "../hooks/useExperience"
+import {
+  ExperienceInput,
+  experienceSchema,
+} from "../validation/experience.validation"
 
 type ExperienceFormData = {
   role: string
@@ -73,7 +76,7 @@ export function CreateExperienceModal() {
     try {
       const dataToParse = {
         ...formData,
-        endDate: formData.isCurrent ? null : (formData.endDate || null)
+        endDate: formData.isCurrent ? null : formData.endDate || null,
       }
       experienceSchema.parse(dataToParse)
 
@@ -182,7 +185,7 @@ export function CreateExperienceModal() {
                 setFormData({ ...formData, employmentType: value })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -215,15 +218,15 @@ export function CreateExperienceModal() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="endDate">End Date</Label>
-                <Input
-                  id="endDate"
-                  type="date"
-                  value={formData.endDate || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, endDate: e.target.value })
-                  }
-                  disabled={formData.isCurrent}
-                />
+              <Input
+                id="endDate"
+                type="date"
+                value={formData.endDate || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, endDate: e.target.value })
+                }
+                disabled={formData.isCurrent}
+              />
             </div>
             <div className="flex items-end">
               <div className="flex items-center gap-2">

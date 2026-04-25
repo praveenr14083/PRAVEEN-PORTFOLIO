@@ -23,10 +23,11 @@ import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useUpdateTechnology } from "../hooks/useTechnologies"
 import { technologySchema } from "../validation/technology.validation"
+import { CATEGORIES } from "@/lib/constants"
 
 type TechnologyFormData = {
   name: string
-  category: "frontend" | "backend" | "database" | "tools"
+  category: string
 }
 
 type EditTechnologyModalProps = {
@@ -48,7 +49,7 @@ export function EditTechnologyModal({
 }: EditTechnologyModalProps) {
   const [formData, setFormData] = useState<TechnologyFormData>({
     name: "",
-    category: "frontend",
+    category: CATEGORIES[0],
   })
 
   const [iconFile, setIconFile] = useState<File | null>(null)
@@ -58,13 +59,13 @@ export function EditTechnologyModal({
 
   const { mutate: updateTechnologyDetails, isPending } = useUpdateTechnology()
 
-  const categories = ["frontend", "backend", "database", "tools"]
+  const categories = CATEGORIES
 
   useEffect(() => {
     if (technology) {
       setFormData({
         name: technology.name || "",
-        category: technology.category || "frontend",
+        category: technology.category || CATEGORIES[0],
       })
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
@@ -133,7 +134,7 @@ export function EditTechnologyModal({
     if (technology) {
       setFormData({
         name: technology.name || "",
-        category: technology.category || "frontend",
+        category: technology.category || CATEGORIES[0],
       })
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
@@ -189,7 +190,7 @@ export function EditTechnologyModal({
               <SelectContent>
                 {categories.map((cat) => (
                   <SelectItem key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat}
                   </SelectItem>
                 ))}
               </SelectContent>

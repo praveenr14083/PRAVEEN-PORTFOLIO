@@ -30,11 +30,12 @@ export default function EducationPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
-  const { data: educationList = [], isLoading } = useEducation()
+  const { data: educationList = [], isLoading, refetch } = useEducation()
   const { mutate: deleteEducation } = useDeleteEducation()
 
   const handleReset = () => {
     setSearchTerm("")
+    refetch()
   }
 
   const filteredEducation = educationList.filter(

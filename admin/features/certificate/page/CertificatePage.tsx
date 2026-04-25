@@ -21,12 +21,13 @@ export default function CertificatePage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
-  const { data: certificates = [], isLoading } = useCertificates()
+  const { data: certificates = [], isLoading, refetch } = useCertificates()
   const { mutate: deleteCertificate } = useDeleteCertificate()
 
   // Sample certificates data
   const handleReset = () => {
     setSearchTerm("")
+    refetch()
   }
 
   const filteredCertificates = certificates.filter((cert) =>

@@ -32,15 +32,15 @@ export function ProjectsSection() {
     }))
   }, [fetchedProjects])
 
-  // 🔥 Extract unique categories from projects
+  // 🔥 Extract unique categories dynamically from projects
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(new Set(displayProjects.map((p: any) => p.category))).map(
-      (cat: any) => ({
-        id: cat.toLowerCase(),
+    const uniqueCategories = Array.from(new Set(displayProjects.map((p: any) => p.category)))
+      .filter(Boolean)
+      .map((cat: any) => ({
+        id: cat.toLowerCase().replace(/\s+/g, '-'),
         name: cat,
         type: cat.toLowerCase(),
-      })
-    )
+      }))
 
     return [{ id: 'all', name: 'All', type: 'all' }, ...uniqueCategories]
   }, [displayProjects])

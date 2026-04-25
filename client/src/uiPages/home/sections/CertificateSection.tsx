@@ -1,7 +1,7 @@
 'use client'
 
 import { usePortfolio } from '@/hooks/usePortfolio'
-import { X, ZoomIn } from 'lucide-react'
+import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import Marquee from 'react-fast-marquee'
@@ -39,8 +39,7 @@ export function CertificateSection() {
                   />
 
                   {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 p-6 text-center">
-                    <ZoomIn className="text-white w-8 h-8" />
+                  <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 p-6 text-center">
                     <p className="text-white font-bold text-lg">{cert.name}</p>
                   </div>
                 </div>

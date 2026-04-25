@@ -13,7 +13,6 @@ const technologySchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["frontend", "backend", "database", "tools"],
       required: true,
     },
   },

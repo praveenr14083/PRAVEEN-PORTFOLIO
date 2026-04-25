@@ -25,6 +25,7 @@ import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useUpdateProject } from "../hooks/useProjects"
 import { ProjectInput, projectSchema } from "../validation/project.validation"
+import { CATEGORIES } from "@/lib/constants"
 
 type EditProjectModalProps = {
   open: boolean
@@ -47,7 +48,7 @@ export function EditProjectModal({
     title: "",
     description: "",
     technologies: "",
-    category: "Other",
+    category: CATEGORIES[0],
     status: "draft",
     featured: false,
     liveUrl: "",
@@ -61,14 +62,7 @@ export function EditProjectModal({
 
   const { mutate: updateProjectDetails, isPending } = useUpdateProject()
 
-  const categories = [
-    "Web Development",
-    "Mobile App",
-    "UI/UX Design",
-    "Backend",
-    "Full Stack",
-    "Other",
-  ]
+  const categories = CATEGORIES
 
   useEffect(() => {
     if (project) {
@@ -78,7 +72,7 @@ export function EditProjectModal({
         technologies: Array.isArray(project.technologies)
           ? project.technologies.join(", ")
           : project.technologies || "",
-        category: project.category || "Other",
+        category: project.category || CATEGORIES[0],
         status: project.status || "draft",
         featured: project.featured || false,
         liveUrl: project.liveUrl || "",
@@ -155,7 +149,7 @@ export function EditProjectModal({
         technologies: Array.isArray(project.technologies)
           ? project.technologies.join(", ")
           : project.technologies || "",
-        category: project.category || "Other",
+        category: project.category || CATEGORIES[0],
         status: project.status || "draft",
         featured: project.featured || false,
         liveUrl: project.liveUrl || "",

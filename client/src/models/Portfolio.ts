@@ -70,7 +70,7 @@ const technologySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     icon: { url: String, public_id: String },
-    category: { type: String, enum: ["frontend", "backend", "database", "tools"] },
+    category: { type: String },
   },
   { timestamps: true }
 );

@@ -26,6 +26,7 @@ import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useCreateProject } from "../hooks/useProjects"
 import { ProjectInput, projectSchema } from "../validation/project.validation"
+import { CATEGORIES } from "@/lib/constants"
 
 export function CreateProjectModal() {
   const [open, setOpen] = useState(false)
@@ -33,7 +34,7 @@ export function CreateProjectModal() {
     title: "",
     description: "",
     technologies: "",
-    category: "Other",
+    category: CATEGORIES[0],
     status: "draft",
     featured: false,
     liveUrl: "",
@@ -46,14 +47,7 @@ export function CreateProjectModal() {
 
   const { mutate: createProject, isPending } = useCreateProject()
 
-  const categories = [
-    "Web Development",
-    "Mobile App",
-    "UI/UX Design",
-    "Backend",
-    "Full Stack",
-    "Other",
-  ]
+  const categories = CATEGORIES
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -102,7 +96,7 @@ export function CreateProjectModal() {
       title: "",
       description: "",
       technologies: "",
-      category: "Other",
+      category: CATEGORIES[0],
       status: "draft",
       featured: false,
       liveUrl: "",

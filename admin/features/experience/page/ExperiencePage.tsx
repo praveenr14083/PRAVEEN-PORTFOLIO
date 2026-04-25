@@ -30,11 +30,12 @@ export default function ExperiencePage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
-  const { data: experiences = [], isLoading } = useExperience()
+  const { data: experiences = [], isLoading, refetch } = useExperience()
   const { mutate: deleteExperience } = useDeleteExperience()
 
   const handleReset = () => {
     setSearchTerm("")
+    refetch()
   }
 
   const filteredExperience = experiences.filter(

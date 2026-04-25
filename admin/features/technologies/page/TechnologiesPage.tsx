@@ -17,6 +17,7 @@ import { CreateTechnologyModal } from "../components/CreateTechnologyModal"
 import { EditTechnologyModal } from "../components/EditTechnologyModal"
 import { TechnologyCard } from "../components/TechnologyCard"
 import { useDeleteTechnology, useTechnologies } from "../hooks/useTechnologies"
+import { CATEGORIES } from "@/lib/constants"
 
 export default function TechnologiesPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -26,20 +27,15 @@ export default function TechnologiesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
-  const { data: technologies = [], isLoading } = useTechnologies()
+  const { data: technologies = [], isLoading, refetch } = useTechnologies()
   const { mutate: deleteTechnology } = useDeleteTechnology()
 
-  const categories = [
-    "All Categories",
-    "frontend",
-    "backend",
-    "database",
-    "tools",
-  ]
+  const categories = ["All Categories", ...CATEGORIES]
 
   const handleReset = () => {
     setSearchTerm("")
     setSelectedCategory("All Categories")
+    refetch()
   }
 
   const filteredTechnologies = technologies.filter((tech) => {

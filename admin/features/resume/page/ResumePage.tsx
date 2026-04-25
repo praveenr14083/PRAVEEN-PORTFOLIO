@@ -5,13 +5,13 @@ import { NotFound } from "@/components/common/NotFound"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Eye, Loader2, Trash2 } from "lucide-react"
+import { Eye, Loader2, RotateCcw, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { ReplaceResumeModal } from "../components/ReplaceResumeModal"
 import { useDeleteResume, useResume } from "../hooks/useResume"
 
 export default function ResumePage() {
-  const { data: resume, isLoading } = useResume()
+  const { data: resume, isLoading, refetch } = useResume()
   const { mutate: deleteResume, isPending: isDeleting } = useDeleteResume()
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
@@ -28,7 +28,6 @@ export default function ResumePage() {
     <section className="space-y-4">
       {/* 🔹 Top Action Row */}
       <div className="flex flex-wrap items-center justify-end gap-3">
-        {/* Preview */}
         <Button
           variant="secondary"
           className="gap-2"
@@ -37,6 +36,10 @@ export default function ResumePage() {
         >
           <Eye className="h-4 w-4" />
           Preview
+        </Button>
+        <Button variant="outline" className="gap-2" onClick={() => refetch()}>
+          <RotateCcw className="h-4 w-4" />
+          Reload
         </Button>
 
         {/* Delete */}

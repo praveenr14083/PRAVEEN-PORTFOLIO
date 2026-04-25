@@ -17,14 +17,6 @@ const projectSchema = new mongoose.Schema(
     ],
     category: {
       type: String,
-      enum: [
-        "Web Development",
-        "Mobile App",
-        "UI/UX Design",
-        "Backend",
-        "Full Stack",
-        "Other",
-      ],
       default: "Other",
     },
     status: {

@@ -10,8 +10,8 @@ export function Topbar() {
         <PageHeader />
       </div>
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
+        <AvatarImage src="https://avatars.githubusercontent.com/u/144775786?v=4" />
+        <AvatarFallback>PR</AvatarFallback>
       </Avatar>
     </div>
   )

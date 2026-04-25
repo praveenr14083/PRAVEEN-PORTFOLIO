@@ -19,11 +19,12 @@ export default function SkillsPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
 
-  const { data: skills = [], isLoading } = useSkills()
+  const { data: skills = [], isLoading, refetch } = useSkills()
   const { mutate: deleteSkill } = useDeleteSkill()
 
   const handleReset = () => {
     setSearchTerm("")
+    refetch()
   }
 
   // Filter skills based on search
@@ -65,6 +66,9 @@ export default function SkillsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <Button variant="outline" onClick={handleReset}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
         <CreateSkillModal />
       </div>
 

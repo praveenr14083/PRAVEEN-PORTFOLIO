@@ -1,22 +1,23 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
-import React, { useState } from "react"
-import { CreateProjectModal } from "../components/CreateProjectModal"
-import { EditProjectModal } from "../components/EditProjectModal"
-import { ProjectCard } from "../components/ProjectCard"
+import { ConfirmDialog } from "@/components/common/ConfirmDialog"
+import { NotFound } from "@/components/common/NotFound"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { RotateCcw, ChevronDown, RotateCw } from "lucide-react"
-import { useProjects, useDeleteProject } from "../hooks/useProjects"
+import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ConfirmDialog } from "@/components/common/ConfirmDialog"
-import { NotFound } from "@/components/common/NotFound"
+import { CATEGORIES } from "@/lib/constants"
+import { ChevronDown, RotateCcw } from "lucide-react"
+import { useState } from "react"
+import { CreateProjectModal } from "../components/CreateProjectModal"
+import { EditProjectModal } from "../components/EditProjectModal"
+import { ProjectCard } from "../components/ProjectCard"
+import { useDeleteProject, useProjects } from "../hooks/useProjects"
 
 type ProjectFormData = {
   title: string
@@ -45,15 +46,7 @@ export default function ProjectsPage() {
   const { data: projects = [], isLoading, refetch } = useProjects()
   const { mutate: deleteProject } = useDeleteProject()
 
-  const categories = [
-    "All Categories",
-    "Web Development",
-    "Mobile App",
-    "UI/UX Design",
-    "Backend",
-    "Full Stack",
-    "Other",
-  ]
+  const categories = ["All Categories", ...CATEGORIES]
 
   const statuses = [
     { value: "All Status", label: "All Status" },
@@ -121,12 +114,12 @@ export default function ProjectsPage() {
           {/* Category Filter - DropdownMenu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-[180px] justify-between">
+              <Button variant="outline" className="w-[200px] justify-between">
                 <span>{selectedCategory}</span>
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[180px]">
+            <DropdownMenuContent className="w-[200px]">
               {categories.map((category) => (
                 <DropdownMenuItem
                   key={category}
@@ -147,7 +140,7 @@ export default function ProjectsPage() {
                     ? "All Status"
                     : statuses.find((s) => s.value === selectedStatus)?.label}
                 </span>
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[150px]">
