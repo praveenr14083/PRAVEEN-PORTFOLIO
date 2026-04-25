@@ -18,13 +18,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { CATEGORIES } from "@/utils/constants"
 import { Loader2, Plus, Upload, X } from "lucide-react"
 import React, { useState } from "react"
 import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useCreateTechnology } from "../hooks/useTechnologies"
 import { technologySchema } from "../validation/technology.validation"
-import { CATEGORIES } from "@/lib/constants"
 
 type TechnologyFormData = {
   name: string

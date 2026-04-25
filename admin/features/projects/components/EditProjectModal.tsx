@@ -19,13 +19,13 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { CATEGORIES } from "@/utils/constants"
 import { Loader2, Upload, X } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useUpdateProject } from "../hooks/useProjects"
 import { ProjectInput, projectSchema } from "../validation/project.validation"
-import { CATEGORIES } from "@/lib/constants"
 
 type EditProjectModalProps = {
   open: boolean
@@ -117,7 +117,10 @@ export function EditProjectModal({
         submitData.append("removeImage", "true")
       }
 
-      console.log('Frontend: Submitting FormData with entries:', Array.from((submitData as any).entries()))
+      console.log(
+        "Frontend: Submitting FormData with entries:",
+        Array.from((submitData as any).entries())
+      )
 
       updateProjectDetails(
         { id: project._id, formData: submitData },

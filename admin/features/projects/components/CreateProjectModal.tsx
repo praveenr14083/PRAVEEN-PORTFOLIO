@@ -20,13 +20,13 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { CATEGORIES } from "@/utils/constants"
 import { Loader2, Plus, Upload, X } from "lucide-react"
 import React, { useState } from "react"
 import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useCreateProject } from "../hooks/useProjects"
 import { ProjectInput, projectSchema } from "../validation/project.validation"
-import { CATEGORIES } from "@/lib/constants"
 
 export function CreateProjectModal() {
   const [open, setOpen] = useState(false)

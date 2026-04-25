@@ -3,7 +3,7 @@ import { api } from "@/lib/api";
 export interface Technology {
   _id: string;
   name: string;
-  category: "frontend" | "backend" | "database" | "tools";
+  category: string;
   icon?: { url: string; public_id: string };
   createdAt: string;
 }

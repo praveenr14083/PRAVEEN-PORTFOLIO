@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CATEGORIES } from "@/lib/constants"
+import { CATEGORIES } from "@/utils/constants"
 import { ChevronDown, RotateCcw } from "lucide-react"
 import { useState } from "react"
 import { CreateProjectModal } from "../components/CreateProjectModal"

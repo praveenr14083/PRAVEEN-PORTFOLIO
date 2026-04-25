@@ -26,9 +26,14 @@ import {
   GraduationCap,
   LayoutDashboard,
   LogOut,
+  Moon,
   ShieldCheck,
+  Sun,
 } from "lucide-react"
-import { useState } from "react"
+
+import { Switch } from "@/components/ui/switch"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 import { ConfirmDialog } from "./ConfirmDialog"
 
 const menuItems = [
@@ -52,6 +57,14 @@ export function AppSidebar() {
   const { mutate: logout, isPending: isLoggingOut } = useLogout()
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
 
+  // Theme logic
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
+
+  const isDark = theme === "dark"
+
   const handleLogout = () => {
     setLogoutConfirmOpen(true)
   }
@@ -67,18 +80,14 @@ export function AppSidebar() {
       <SidebarHeader className="px-3 py-4">
         <div className="flex items-center gap-2">
           <ShieldCheck className="size-5" />
-
-          {/* Hide text when collapsed */}
-          {!isCollapsed && (
-            <span className="*: font-semibold">Admin Panel</span>
-          )}
+          {!isCollapsed && <span className="font-semibold">Admin Panel</span>}
         </div>
       </SidebarHeader>
 
       {/* Content */}
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu className="gap-2">
+          <SidebarMenu className="gap-1">
             {menuItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname.startsWith(item.href)
@@ -105,6 +114,36 @@ export function AppSidebar() {
       {/* Footer */}
       <SidebarFooter>
         <SidebarMenu>
+          {/* Theme Toggle */}
+          {mounted && (
+            <SidebarMenuItem>
+              {isCollapsed ? (
+                // 👉 Collapsed: show icon button
+                <SidebarMenuButton
+                  onClick={() => setTheme(isDark ? "light" : "dark")}
+                >
+                  {isDark ? <Moon /> : <Sun />}
+                </SidebarMenuButton>
+              ) : (
+                // 👉 Expanded: show full switch
+                <div className="flex w-full items-center justify-between px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    {isDark ? <Moon size={16} /> : <Sun size={16} />}
+                    <span className="text-sm">{isDark ? "Dark" : "Light"}</span>
+                  </div>
+
+                  <Switch
+                    checked={isDark}
+                    onCheckedChange={(checked) =>
+                      setTheme(checked ? "dark" : "light")
+                    }
+                  />
+                </div>
+              )}
+            </SidebarMenuItem>
+          )}
+
+          {/* Logout */}
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}
@@ -116,6 +155,8 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
+      {/* Confirm Dialog */}
       <ConfirmDialog
         open={logoutConfirmOpen}
         onOpenChange={setLogoutConfirmOpen}

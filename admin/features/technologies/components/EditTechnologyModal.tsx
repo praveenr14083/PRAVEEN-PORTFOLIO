@@ -17,13 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { CATEGORIES } from "@/utils/constants"
 import { Loader2, Upload, X } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { ZodError } from "zod"
 import { useUpdateTechnology } from "../hooks/useTechnologies"
 import { technologySchema } from "../validation/technology.validation"
-import { CATEGORIES } from "@/lib/constants"
 
 type TechnologyFormData = {
   name: string
@@ -106,7 +106,10 @@ export function EditTechnologyModal({
         submitData.append("removeIcon", "true")
       }
 
-      console.log('Frontend: Submitting FormData for technology:', Array.from((submitData as any).entries()))
+      console.log(
+        "Frontend: Submitting FormData for technology:",
+        Array.from((submitData as any).entries())
+      )
 
       updateTechnologyDetails(
         { id: technology._id, formData: submitData },

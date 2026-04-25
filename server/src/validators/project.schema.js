@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const projectSchema = z.object({
   title: z.string().min(1),
@@ -8,42 +8,35 @@ export const projectSchema = z.object({
   technologies: z
     .string()
     .optional()
-    .transform((val) => (val ? val.split(",") : [])),
+    .transform((val) => (val ? val.split(',') : [])),
 
-  category: z.enum([
-    "Web Development",
-    "Mobile App",
-    "UI/UX Design",
-    "Backend",
-    "Full Stack",
-    "Other",
-  ]),
+  category: z.string().optional(),
 
-  status: z.enum(["draft", "published"]).optional(),
+  status: z.enum(['draft', 'published']).optional(),
 
   featured: z
     .string()
     .optional()
-    .transform((val) => val === "true"),
+    .transform((val) => val === 'true'),
 
   liveUrl: z
     .string()
     .url()
     .optional()
-    .or(z.literal(""))
+    .or(z.literal(''))
     .transform((val) => val || undefined),
   githubUrl: z
     .string()
     .url()
     .optional()
-    .or(z.literal(""))
+    .or(z.literal(''))
     .transform((val) => val || undefined),
 
   // Handle image field properly - can be a string (filename) or null/undefined
   image: z
     .string()
     .optional()
-    .or(z.literal(""))
+    .or(z.literal(''))
     .transform((val) => val || undefined),
   removeImage: z.string().optional(),
-});
+})

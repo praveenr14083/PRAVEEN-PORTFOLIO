@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
+import { CATEGORIES } from "@/utils/constants"
 import { ChevronDown, RotateCcw } from "lucide-react"
 import { useState } from "react"
 import { CreateTechnologyModal } from "../components/CreateTechnologyModal"
 import { EditTechnologyModal } from "../components/EditTechnologyModal"
 import { TechnologyCard } from "../components/TechnologyCard"
 import { useDeleteTechnology, useTechnologies } from "../hooks/useTechnologies"
-import { CATEGORIES } from "@/lib/constants"
 
 export default function TechnologiesPage() {
   const [searchTerm, setSearchTerm] = useState("")

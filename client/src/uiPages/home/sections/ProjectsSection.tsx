@@ -1,8 +1,10 @@
 'use client'
+import { ButtonRounded } from '@/components/common/ButtonRounded'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { cn } from '@/lib/utils'
 import { UIProject } from '@/types/portfolio'
-import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import { ProjectCard } from '../components/ProjectCard'
 import { PROJECTS_DATA } from '../data/projects'
 
@@ -14,6 +16,12 @@ type Category = {
 
 export function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState('all')
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  // 🔥 Reset expansion state when category changes
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [activeCategory])
   const { portfolioData, isLoading, error } = usePortfolio()
   const { projects: fetchedProjects } = portfolioData
 
@@ -46,10 +54,13 @@ export function ProjectsSection() {
   }, [displayProjects])
 
   // 🔥 Filter projects by active category
-  const filteredProjects =
-    activeCategory === 'all'
+  const filteredProjects = useMemo(() => {
+    return activeCategory === 'all'
       ? displayProjects
       : displayProjects.filter((p: any) => p.category.toLowerCase() === activeCategory)
+  }, [displayProjects, activeCategory])
+
+  const visibleProjects = isExpanded ? filteredProjects : filteredProjects.slice(0, 6)
 
   return (
     <section id="projects" className="section-fullscreen bg-background py-20">
@@ -91,10 +102,23 @@ export function ProjectsSection() {
 
         {/* Projects Grid */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project: UIProject) => (
+          {visibleProjects.map((project: UIProject) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
+
+        {/* Show More Button */}
+        {filteredProjects.length > 6 && (
+          <div className="flex justify-center mt-4">
+            <ButtonRounded
+              onClick={() => setIsExpanded(!isExpanded)}
+              icon={isExpanded ? ChevronUp : ChevronDown}
+              className="font-semibold"
+            >
+              {isExpanded ? 'Show Less' : 'Show More'}
+            </ButtonRounded>
+          </div>
+        )}
       </div>
     </section>
   )
