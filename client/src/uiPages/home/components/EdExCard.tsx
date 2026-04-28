@@ -15,9 +15,7 @@ export function EdExCard({ data }: EdExCardProps) {
     <div className="w-full flex gap-1">
       <div className="flex flex-col items-center">
         {/*Round and Vertical line */}
-        <div
-          className={`p-2 rounded-full ${data.isCurrent ? 'bg-green-500 animate-pulse' : 'bg-primary-color'}`}
-        />
+        <div className={`p-2 rounded-full ${data.isCurrent ? 'bg-white' : 'bg-primary-color'}`} />
 
         {/* Vertical Line */}
         <div className="border-l-1 border-dashed border-primary-color h-full w-[1px]"></div>

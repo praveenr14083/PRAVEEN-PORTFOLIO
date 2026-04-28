@@ -101,7 +101,7 @@ export function ProjectsSection() {
         )}
 
         {/* Projects Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 gap-10">
           {visibleProjects.map((project: UIProject) => (
             <ProjectCard key={project.id} project={project} />
           ))}

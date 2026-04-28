@@ -1,16 +1,20 @@
-import React from "react";
-import { Github, ExternalLink, Folder } from "lucide-react";
-import { UIProject } from "@/types/portfolio";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge'
+import { Icon } from '@/components/ui/evervault-card'
+import { UIProject } from '@/types/portfolio'
+import { ExternalLink, Github } from 'lucide-react'
+import Link from 'next/link'
 
 interface ProjectCardProps {
-  project: UIProject;
+  project: UIProject
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <div className="group relative w-full h-full bg-foreground/5 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary-color/50 transition-all duration-300 flex flex-col">
+    <div className="group border border-black/[0.2] dark:border-white/[0.2] p-4 relative min-h-[30rem]">
+      <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
+      <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />
+      <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-white text-black" />
+      <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-white text-black" />
       {/* Image Container */}
       <div className="relative w-full h-48 overflow-hidden">
         <img
@@ -44,14 +48,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <h3 className="text-xl font-bold line-clamp-1 group-hover:text-primary-color transition-colors">
             {project.title}
           </h3>
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="outline" className="text-xs">
             {project.category}
           </Badge>
         </div>
 
-        <p className="text-muted-foreground text-sm line-clamp-3 grow">
-          {project.description}
-        </p>
+        <p className="text-muted-foreground text-sm line-clamp-3 grow">{project.description}</p>
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-2 mt-auto">
@@ -66,5 +68,5 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

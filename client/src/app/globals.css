@@ -1,10 +1,10 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-primary-color: #00A3E0;
+  --color-primary-color: #00a3e0;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -45,13 +45,15 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
-  --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
+  --animate-orbit: orbit calc(var(--duration) * 1s) linear infinite;
   @keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+    0% {
+      transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px))
+        rotate(calc(var(--angle) * -1deg));
     }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+    100% {
+      transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px))
+        rotate(calc((var(--angle) * -1deg) - 360deg));
     }
   }
 }
@@ -137,13 +139,12 @@
 
 @layer components {
   @layer components {
-  .navbar {
-    @apply 
-      px-4 sm:px-6 lg:px-16 2xl:px-24
+    .navbar {
+      @apply px-4 sm:px-6 lg:px-16 2xl:px-24
       py-6;
-    height: var(--navbar-height);
+      height: var(--navbar-height);
+    }
   }
-}
 
   /* ---------- Horizontal Padding Only ---------- */
   .section-px {
@@ -157,16 +158,14 @@
 
   /* ---------- Standard Section Container (px + py) ---------- */
   .section-container {
-    @apply 
-      w-full
+    @apply w-full
       px-4 sm:px-6 lg:px-16 2xl:px-24
       py-4 sm:py-6 lg:py-8;
   }
 
   /* ---------- Full Screen Section ---------- */
   .section-fullscreen {
-    @apply 
-      w-full
+    @apply w-full
       px-4 sm:px-6 lg:px-16 2xl:px-24
       py-4 sm:py-6 lg:py-8;
 
@@ -175,8 +174,7 @@
 
   /* ---------- Full Screen Section Center ---------- */
   .section-fullscreen-center {
-    @apply 
-      w-full
+    @apply w-full
       px-4 sm:px-6 lg:px-16 2xl:px-24
       flex items-center justify-center;
 

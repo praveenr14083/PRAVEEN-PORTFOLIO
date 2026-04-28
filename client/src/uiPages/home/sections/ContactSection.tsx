@@ -1,8 +1,7 @@
-import React from "react";
-import { ContactForm } from "../components/ContactForm";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { CONTACT_INFO } from "@/utils/contact.const";
+import { Card, CardContent } from '@/components/ui/card'
+import { Icon } from '@/components/ui/evervault-card'
+import { CONTACT_INFO } from '@/utils/contact.const'
+import { ContactForm } from '../components/ContactForm'
 
 export function ContactSection() {
   return (
@@ -14,8 +13,7 @@ export function ContactSection() {
             Contact Me
           </h1>
           <p className="max-w-[600px] text-md text-muted-foreground text-center">
-            Ready to build something properly? Let's turn your vision into
-            reality.
+            Ready to build something properly? Let's turn your vision into reality.
           </p>
         </div>
 
@@ -29,16 +27,16 @@ export function ContactSection() {
           </div>
         </div>
         <div className="w-full">
-          <Card className="rounded bg-foreground/4 backdrop-blur-2xl">
+          <Card className="rounded-none bg-background border border-black/[0.2] dark:border-white/[0.2]  relative">
+            <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
+            <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />
+            <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-white text-black" />
+            <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-white text-black" />
+
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {CONTACT_INFO.map((item) => (
-                  <a
-                    key={item.label}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a key={item.label} href={item.link} target="_blank" rel="noopener noreferrer">
                     <Card className="p-3 border border-border rounded">
                       <CardContent className="p-0">
                         <div className="flex items-center gap-3">
@@ -49,9 +47,7 @@ export function ContactSection() {
                           <div>
                             <p className="font-semibold">{item.label}</p>
                             {item.value && (
-                              <p className="text-xs text-muted-foreground">
-                                {item.value}
-                              </p>
+                              <p className="text-xs text-muted-foreground">{item.value}</p>
                             )}
                           </div>
                         </div>
@@ -65,5 +61,5 @@ export function ContactSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

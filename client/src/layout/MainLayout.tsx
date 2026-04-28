@@ -1,22 +1,22 @@
-"use client";
+'use client'
+import { usePortfolio } from '@/hooks/usePortfolio'
 import React from 'react'
 import { Footer } from '../components/common/Footer'
+import { LoadingScreen } from '../components/common/LoadingScreen'
 import { Navbar } from '../components/common/Navbar'
-import { usePortfolio } from '@/hooks/usePortfolio';
-import { LoadingScreen } from '../components/common/LoadingScreen';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const { isLoading } = usePortfolio();
-  const [minTimeElapsed, setMinTimeElapsed] = React.useState(false);
+  const { isLoading } = usePortfolio()
+  const [minTimeElapsed, setMinTimeElapsed] = React.useState(false)
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      setMinTimeElapsed(true);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+      setMinTimeElapsed(true)
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const showLoading = isLoading || !minTimeElapsed;
+  const showLoading = isLoading || !minTimeElapsed
 
   return (
     <>

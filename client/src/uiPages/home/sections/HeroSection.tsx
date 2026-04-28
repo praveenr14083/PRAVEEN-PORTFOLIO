@@ -21,9 +21,9 @@ export function HeroSection() {
           )}
         />
         <div className="-z-10 pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_10%,black)] dark:bg-black"></div>
-        <div className="-z-10 hidden lg:block absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-primary-color/10 rounded-full blur-3xl"></div>
-        <div className="hidden lg:block absolute top-0 -right-32 w-[300px] h-[300px] bg-primary-color/10 rounded-full blur-3xl"></div>
-        <div className="hidden lg:block absolute top-0 -right-80 w-[500px] h-[500px] bg-primary-color/5 rounded-full blur-3xl"></div>
+        <div className="-z-10 absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-primary-color/10 rounded-full blur-3xl"></div>
+        <div className=" -z-10 absolute top-0 -right-32 w-[300px] h-[300px] bg-primary-color/10 rounded-full blur-3xl"></div>
+        <div className="-z-10 absolute top-0 -right-80 w-[500px] h-[500px] bg-primary-color/5 rounded-full blur-3xl"></div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col items-center md:items-start justify-center gap-8 order-2 lg:order-1">

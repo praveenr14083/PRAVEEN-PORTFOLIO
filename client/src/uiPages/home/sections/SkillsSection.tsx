@@ -45,7 +45,7 @@ export function SkillsSection() {
           </div>
 
           {/* RIGHT - Scrollable Skills (Desktop Only) */}
-          <div className="flex flex-col items-center justify-start gap-8">
+          <div className="flex flex-col items-center justify-start gap-10">
             {displaySkills.map((skillCategory, index) => (
               <SkillCard
                 key={index}
