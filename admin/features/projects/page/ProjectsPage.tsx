@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CATEGORIES } from "@/utils/constants"
 import { ChevronDown, RotateCcw } from "lucide-react"
 import { useState } from "react"
 import { CreateProjectModal } from "../components/CreateProjectModal"
@@ -35,7 +34,6 @@ type ProjectFormData = {
 }
 
 export default function ProjectsPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [selectedStatus, setSelectedStatus] = useState("All Status")
   const [searchTerm, setSearchTerm] = useState("")
   const [editOpen, setEditOpen] = useState(false)
@@ -46,24 +44,17 @@ export default function ProjectsPage() {
   const { data: projects = [], isLoading, refetch } = useProjects()
   const { mutate: deleteProject } = useDeleteProject()
 
-  const categories = ["All Categories", ...CATEGORIES]
-
   const statuses = [
     { value: "All Status", label: "All Status" },
     { value: "published", label: "Published" },
     { value: "draft", label: "Draft" },
   ]
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category)
-  }
-
   const handleStatusSelect = (status: string) => {
     setSelectedStatus(status)
   }
 
   const handleReset = () => {
-    setSelectedCategory("All Categories")
     setSelectedStatus("All Status")
     setSearchTerm("")
     refetch()
@@ -84,15 +75,12 @@ export default function ProjectsPage() {
 
   // Filter projects based on selections
   const filteredProjects = projects.filter((project) => {
-    const matchesCategory =
-      selectedCategory === "All Categories" ||
-      project.category === selectedCategory
     const matchesStatus =
       selectedStatus === "All Status" || project.status === selectedStatus
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesCategory && matchesStatus && matchesSearch
+    return matchesStatus && matchesSearch
   })
 
   return (
@@ -110,26 +98,6 @@ export default function ProjectsPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
-          {/* Category Filter - DropdownMenu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-[200px] justify-between">
-                <span>{selectedCategory}</span>
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[200px]">
-              {categories.map((category) => (
-                <DropdownMenuItem
-                  key={category}
-                  onClick={() => handleCategorySelect(category)}
-                >
-                  {category}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
 
           {/* Status Filter - DropdownMenu */}
           <DropdownMenu>

@@ -62,10 +62,12 @@ export function EditProjectModal({
 
   const { mutate: updateProjectDetails, isPending } = useUpdateProject()
 
-  const categories = CATEGORIES
+  const categories = [...CATEGORIES, "Others"]
+  const [showCustomCategory, setShowCustomCategory] = useState(false)
 
   useEffect(() => {
     if (project) {
+      const isCustom = project.category && !CATEGORIES.includes(project.category)
       setFormData({
         title: project.title || "",
         description: project.description || "",
@@ -78,6 +80,7 @@ export function EditProjectModal({
         liveUrl: project.liveUrl || "",
         githubUrl: project.githubUrl || "",
       })
+      setShowCustomCategory(isCustom)
       if (project.image?.url) {
         setPreviewUrl(project.image.url)
         setRemoveImage(false)
@@ -146,6 +149,7 @@ export function EditProjectModal({
 
   const resetForm = () => {
     if (project) {
+      const isCustom = project.category && !CATEGORIES.includes(project.category)
       setFormData({
         title: project.title || "",
         description: project.description || "",
@@ -158,6 +162,7 @@ export function EditProjectModal({
         liveUrl: project.liveUrl || "",
         githubUrl: project.githubUrl || "",
       })
+      setShowCustomCategory(isCustom)
       if (project.image?.url) {
         setPreviewUrl(project.image.url)
         setRemoveImage(false)
@@ -218,10 +223,16 @@ export function EditProjectModal({
           <div className="space-y-2">
             <Label htmlFor="edit-category">Category</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                setFormData({ ...formData, category: value })
-              }
+              value={showCustomCategory ? "Others" : formData.category}
+              onValueChange={(value) => {
+                if (value === "Others") {
+                  setShowCustomCategory(true)
+                  setFormData({ ...formData, category: "" })
+                } else {
+                  setShowCustomCategory(false)
+                  setFormData({ ...formData, category: value })
+                }
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
@@ -234,6 +245,16 @@ export function EditProjectModal({
                 ))}
               </SelectContent>
             </Select>
+            {showCustomCategory && (
+              <Input
+                placeholder="Enter custom category"
+                value={formData.category}
+                onChange={(e) => {
+                  setFormData({ ...formData, category: e.target.value })
+                }}
+                className="mt-2"
+              />
+            )}
           </div>
 
           {/* Technologies */}

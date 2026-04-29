@@ -47,7 +47,8 @@ export function CreateProjectModal() {
 
   const { mutate: createProject, isPending } = useCreateProject()
 
-  const categories = CATEGORIES
+  const categories = [...CATEGORIES, "Others"]
+  const [showCustomCategory, setShowCustomCategory] = useState(false)
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -102,6 +103,7 @@ export function CreateProjectModal() {
       liveUrl: "",
       githubUrl: "",
     })
+    setShowCustomCategory(false)
     setImageFile(null)
     setPreviewUrl("")
     setErrors({})
@@ -161,10 +163,16 @@ export function CreateProjectModal() {
           <div className="space-y-2">
             <Label htmlFor="category">Category</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                setFormData({ ...formData, category: value })
-              }
+              value={showCustomCategory ? "Others" : formData.category}
+              onValueChange={(value) => {
+                if (value === "Others") {
+                  setShowCustomCategory(true)
+                  setFormData({ ...formData, category: "" })
+                } else {
+                  setShowCustomCategory(false)
+                  setFormData({ ...formData, category: value })
+                }
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
@@ -177,6 +185,16 @@ export function CreateProjectModal() {
                 ))}
               </SelectContent>
             </Select>
+            {showCustomCategory && (
+              <Input
+                placeholder="Enter custom category"
+                value={formData.category}
+                onChange={(e) => {
+                  setFormData({ ...formData, category: e.target.value })
+                }}
+                className="mt-2"
+              />
+            )}
           </div>
 
           {/* Technologies */}

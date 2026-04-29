@@ -44,7 +44,8 @@ export function CreateTechnologyModal() {
 
   const { mutate: createTechnology, isPending } = useCreateTechnology()
 
-  const categories = CATEGORIES
+  const categories = [...CATEGORIES, "Others"]
+  const [showCustomCategory, setShowCustomCategory] = useState(false)
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -95,6 +96,7 @@ export function CreateTechnologyModal() {
       name: "",
       category: CATEGORIES[0],
     })
+    setShowCustomCategory(false)
     setIconFile(null)
     setPreviewUrl("")
     setErrors({})
@@ -137,10 +139,16 @@ export function CreateTechnologyModal() {
           <div className="space-y-2">
             <Label htmlFor="tech-category">Category *</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value: any) =>
-                setFormData({ ...formData, category: value })
-              }
+              value={showCustomCategory ? "Others" : formData.category}
+              onValueChange={(value: any) => {
+                if (value === "Others") {
+                  setShowCustomCategory(true)
+                  setFormData({ ...formData, category: "" })
+                } else {
+                  setShowCustomCategory(false)
+                  setFormData({ ...formData, category: value })
+                }
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -153,6 +161,16 @@ export function CreateTechnologyModal() {
                 ))}
               </SelectContent>
             </Select>
+            {showCustomCategory && (
+              <Input
+                placeholder="Enter custom category"
+                value={formData.category}
+                onChange={(e) => {
+                  setFormData({ ...formData, category: e.target.value })
+                }}
+                className="mt-2"
+              />
+            )}
           </div>
 
           {/* Icon Upload */}

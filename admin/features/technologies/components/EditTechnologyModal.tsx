@@ -59,14 +59,17 @@ export function EditTechnologyModal({
 
   const { mutate: updateTechnologyDetails, isPending } = useUpdateTechnology()
 
-  const categories = CATEGORIES
+  const categories = [...CATEGORIES, "Others"]
+  const [showCustomCategory, setShowCustomCategory] = useState(false)
 
   useEffect(() => {
     if (technology) {
+      const isCustom = technology.category && !CATEGORIES.includes(technology.category)
       setFormData({
         name: technology.name || "",
         category: technology.category || CATEGORIES[0],
       })
+      setShowCustomCategory(isCustom)
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
         setRemoveIcon(false)
@@ -135,10 +138,12 @@ export function EditTechnologyModal({
 
   const resetForm = () => {
     if (technology) {
+      const isCustom = technology.category && !CATEGORIES.includes(technology.category)
       setFormData({
         name: technology.name || "",
         category: technology.category || CATEGORIES[0],
       })
+      setShowCustomCategory(isCustom)
       if (technology.icon?.url) {
         setPreviewUrl(technology.icon.url)
         setRemoveIcon(false)
@@ -182,10 +187,16 @@ export function EditTechnologyModal({
           <div className="space-y-2">
             <Label htmlFor="edit-tech-category">Category *</Label>
             <Select
-              value={formData.category}
-              onValueChange={(value: any) =>
-                setFormData({ ...formData, category: value })
-              }
+              value={showCustomCategory ? "Others" : formData.category}
+              onValueChange={(value: any) => {
+                if (value === "Others") {
+                  setShowCustomCategory(true)
+                  setFormData({ ...formData, category: "" })
+                } else {
+                  setShowCustomCategory(false)
+                  setFormData({ ...formData, category: value })
+                }
+              }}
             >
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -198,6 +209,16 @@ export function EditTechnologyModal({
                 ))}
               </SelectContent>
             </Select>
+            {showCustomCategory && (
+              <Input
+                placeholder="Enter custom category"
+                value={formData.category}
+                onChange={(e) => {
+                  setFormData({ ...formData, category: e.target.value })
+                }}
+                className="mt-2"
+              />
+            )}
           </div>
 
           {/* Icon Upload */}

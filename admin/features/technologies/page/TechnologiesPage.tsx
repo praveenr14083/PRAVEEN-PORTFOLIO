@@ -3,16 +3,9 @@
 import { ConfirmDialog } from "@/components/common/ConfirmDialog"
 import { NotFound } from "@/components/common/NotFound"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CATEGORIES } from "@/utils/constants"
-import { ChevronDown, RotateCcw } from "lucide-react"
+import { RotateCcw } from "lucide-react"
 import { useState } from "react"
 import { CreateTechnologyModal } from "../components/CreateTechnologyModal"
 import { EditTechnologyModal } from "../components/EditTechnologyModal"
@@ -21,7 +14,6 @@ import { useDeleteTechnology, useTechnologies } from "../hooks/useTechnologies"
 
 export default function TechnologiesPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("All Categories")
   const [editOpen, setEditOpen] = useState(false)
   const [selectedTechnology, setSelectedTechnology] = useState<any | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -30,22 +22,16 @@ export default function TechnologiesPage() {
   const { data: technologies = [], isLoading, refetch } = useTechnologies()
   const { mutate: deleteTechnology } = useDeleteTechnology()
 
-  const categories = ["All Categories", ...CATEGORIES]
-
   const handleReset = () => {
     setSearchTerm("")
-    setSelectedCategory("All Categories")
     refetch()
   }
 
   const filteredTechnologies = technologies.filter((tech) => {
-    const matchesCategory =
-      selectedCategory === "All Categories" ||
-      tech.category === selectedCategory
     const matchesSearch = tech.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
-    return matchesCategory && matchesSearch
+    return matchesSearch
   })
 
   const handleEdit = (technology: any) => {
@@ -75,26 +61,6 @@ export default function TechnologiesPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-
-        {/* Category Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-[180px] justify-between">
-              <span className="capitalize">{selectedCategory}</span>
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[180px]">
-            {categories.map((category) => (
-              <DropdownMenuItem
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-              >
-                <span className="capitalize">{category}</span>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
 
         <Button variant="outline" onClick={handleReset}>
           <RotateCcw />
@@ -126,7 +92,7 @@ export default function TechnologiesPage() {
           <NotFound
             title="No technologies found"
             description={
-              searchTerm || selectedCategory !== "All Categories"
+              searchTerm
                 ? "Try adjusting your filters"
                 : "Add your first technology"
             }
