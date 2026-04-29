@@ -60,16 +60,14 @@ export function CreateTechnologyModal() {
     setErrors({})
     try {
       technologySchema.parse(formData)
-      if (!iconFile) {
-        toast.error("Please upload an icon")
-        return
-      }
 
       const submitData = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, String(value))
       })
-      submitData.append("icon", iconFile)
+      if (iconFile) {
+        submitData.append("icon", iconFile)
+      }
 
       createTechnology(submitData, {
         onSuccess: () => {
@@ -175,7 +173,7 @@ export function CreateTechnologyModal() {
 
           {/* Icon Upload */}
           <div className="space-y-2">
-            <Label>Technology Icon</Label>
+            <Label>Technology Icon <span className="text-muted-foreground text-xs">(optional)</span></Label>
             <div
               className="relative flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed bg-muted"
               onClick={() =>
