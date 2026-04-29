@@ -34,9 +34,19 @@ app.use(express.json())
 // Pipe HTTP request logs through Winston
 app.use(morgan('combined', { stream: logger.stream }))
 
-// health
+// root
 app.get('/', (req, res) => {
   res.json({ success: true, message: 'API running 🚀' })
+})
+
+// health check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'healthy',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  })
 })
 
 // protect all API routes (except maybe login if there was one, but Firebase handles login client-side)
