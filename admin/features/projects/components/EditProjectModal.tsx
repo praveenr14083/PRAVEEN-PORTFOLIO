@@ -67,13 +67,16 @@ export function EditProjectModal({
 
   useEffect(() => {
     if (project) {
-      const isCustom = project.category && !CATEGORIES.includes(project.category)
+      const isCustom =
+        project.category && !CATEGORIES.includes(project.category)
       setFormData({
         title: project.title || "",
         description: project.description || "",
         technologies: Array.isArray(project.technologies)
-          ? project.technologies.join(", ")
-          : project.technologies || "",
+          ? project.technologies.join(",")
+          : typeof project.technologies === "string"
+            ? project.technologies.split(",").map((t: string) => t.trim()).join(",")
+            : "",
         category: project.category || CATEGORIES[0],
         status: project.status || "draft",
         featured: project.featured || false,
@@ -149,13 +152,16 @@ export function EditProjectModal({
 
   const resetForm = () => {
     if (project) {
-      const isCustom = project.category && !CATEGORIES.includes(project.category)
+      const isCustom =
+        project.category && !CATEGORIES.includes(project.category)
       setFormData({
         title: project.title || "",
         description: project.description || "",
         technologies: Array.isArray(project.technologies)
-          ? project.technologies.join(", ")
-          : project.technologies || "",
+          ? project.technologies.join(",")
+          : typeof project.technologies === "string"
+            ? project.technologies.split(",").map((t: string) => t.trim()).join(",")
+            : "",
         category: project.category || CATEGORIES[0],
         status: project.status || "draft",
         featured: project.featured || false,
@@ -264,7 +270,10 @@ export function EditProjectModal({
               id="edit-technologies"
               value={formData.technologies}
               onChange={(e) =>
-                setFormData({ ...formData, technologies: e.target.value })
+                setFormData({
+                  ...formData,
+                  technologies: e.target.value.replace(/\s*,\s*/g, ","),
+                })
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />

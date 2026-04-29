@@ -204,7 +204,7 @@ export function CreateProjectModal() {
               id="technologies"
               value={formData.technologies}
               onChange={(e) =>
-                setFormData({ ...formData, technologies: e.target.value })
+                setFormData({ ...formData, technologies: e.target.value.replace(/\s*,\s*/g, ",") })
               }
               placeholder="Enter technologies (e.g., React, Node.js, TypeScript)"
             />

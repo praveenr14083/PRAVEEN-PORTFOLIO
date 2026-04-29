@@ -156,7 +156,7 @@ export function CreateSkillModal() {
               id="technologies"
               value={formData.technologies}
               onChange={(e) =>
-                setFormData({ ...formData, technologies: e.target.value })
+                setFormData({ ...formData, technologies: e.target.value.replace(/\s*,\s*/g, ",") })
               }
               placeholder="Enter technologies (comma-separated e.g., JavaScript, TypeScript)"
             />

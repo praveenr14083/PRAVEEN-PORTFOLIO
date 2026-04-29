@@ -66,7 +66,9 @@ export function EditSkillModal({
         icon: skill.icon || "code",
         technologies: Array.isArray(skill.technologies)
           ? skill.technologies.join(",")
-          : skill.technologies || "",
+          : typeof skill.technologies === "string"
+            ? skill.technologies.split(",").map((t: string) => t.trim()).join(",")
+            : "",
       })
       setErrors({})
     }
@@ -121,7 +123,9 @@ export function EditSkillModal({
         icon: skill.icon || "code",
         technologies: Array.isArray(skill.technologies)
           ? skill.technologies.join(",")
-          : skill.technologies || "",
+          : typeof skill.technologies === "string"
+            ? skill.technologies.split(",").map((t: string) => t.trim()).join(",")
+            : "",
       })
       setErrors({})
     }
@@ -192,7 +196,7 @@ export function EditSkillModal({
               id="edit-technologies"
               value={formData.technologies}
               onChange={(e) =>
-                setFormData({ ...formData, technologies: e.target.value })
+                setFormData({ ...formData, technologies: e.target.value.replace(/\s*,\s*/g, ",") })
               }
               placeholder="Enter technologies (comma-separated e.g., JavaScript, TypeScript)"
             />
