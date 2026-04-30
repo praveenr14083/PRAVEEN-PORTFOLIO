@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge'
 import { Icon } from '@/components/ui/evervault-card'
 import { UIProject } from '@/types/portfolio'
 import { ExternalLink, Github } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 interface ProjectCardProps {
@@ -18,11 +17,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-white text-black" />
       {/* Image Container */}
       <div className="relative w-full h-48 overflow-hidden">
-        <Image
+        <img
           src={project.image}
           alt={project.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
           <Link

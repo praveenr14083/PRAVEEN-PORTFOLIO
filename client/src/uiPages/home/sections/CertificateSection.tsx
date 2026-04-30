@@ -4,7 +4,6 @@ import { usePortfolio } from '@/hooks/usePortfolio'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
 import { X } from 'lucide-react'
-import Image from 'next/image'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { CERTIFICATES_DATA } from '../data/certificates'
@@ -52,11 +51,10 @@ export function CertificateSection() {
                   onClick={() => setSelectedImage(cert.image.url)}
                 >
                   <div className="w-[300px] md:w-[400px] aspect-[1.4/1] rounded-xl overflow-hidden relative">
-                    <Image
+                    <img
                       src={cert.image.url}
                       alt={cert.name}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Hover Overlay */}

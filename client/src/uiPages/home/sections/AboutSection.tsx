@@ -1,7 +1,6 @@
 'use client'
 import { ButtonRounded } from '@/components/common/ButtonRounded'
 import { BriefcaseBusiness } from 'lucide-react'
-import Image from 'next/image'
 import { Link as ScrollLink } from 'react-scroll'
 
 export function AboutSection() {
@@ -9,7 +8,7 @@ export function AboutSection() {
     <section id="about" className="section-fullscreen bg-background overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="flex items-center justify-center p-10">
-          <Image
+          <img
             className="w-80 h-auto"
             src="/images/about-section/about.png"
             alt="About Praveen"

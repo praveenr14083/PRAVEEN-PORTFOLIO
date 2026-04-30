@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Icon } from '@/components/ui/evervault-card'
-import Image from 'next/image'
 import { CONTACT_INFO } from '@/utils/contact.const'
 import { ContactForm } from '../components/ContactForm'
 
@@ -20,7 +19,7 @@ export function ContactSection() {
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-5 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
-            <Image
+            <img
               className="w-80 h-auto"
               src="/images/contact-section/contact.png"
               alt="Contact Praveen"

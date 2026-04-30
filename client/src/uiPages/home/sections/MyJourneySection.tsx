@@ -11,7 +11,6 @@ import {
   School,
   University,
 } from 'lucide-react'
-import Image from 'next/image'
 import { useMemo } from 'react'
 import { EdExCard } from '../components/EdExCard'
 import { EDUCATION, EXPERIENCE } from '../data/edex'
@@ -108,7 +107,7 @@ export function MyJourneySection() {
           </div>
 
           <div className="order-1 md:order-2 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
-            <Image
+            <img
               className="w-80 h-auto"
               src="/images/myjourney-section/myjourney.png"
               alt="Praveen's Journey"

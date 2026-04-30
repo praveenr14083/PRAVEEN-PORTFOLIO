@@ -72,6 +72,7 @@ export function HeroSection() {
             alt="Praveen - Full Stack Developer"
             width={320}
             height={320}
+            style={{ width: 'auto', height: 'auto' }}
             priority
           />
         </div>

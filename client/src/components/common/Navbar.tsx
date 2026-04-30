@@ -67,7 +67,7 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Avatar className="size-10 border-3 border-white">
+              <Avatar className="size-10">
                 <AvatarImage src="/images/profile/profile-photo.png" />
                 <AvatarFallback>PR</AvatarFallback>
               </Avatar>
