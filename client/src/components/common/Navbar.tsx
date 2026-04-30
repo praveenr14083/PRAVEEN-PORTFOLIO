@@ -35,8 +35,7 @@ export function Navbar() {
             duration={500}
             offset={-70}
             spy={true}
-            activeClass="text-primary-color"
-            className={`text-xl font-doto cursor-pointer transition-colors`}
+            className={`text-xl font-doto cursor-pointer`}
           >
             PRAVEEN
           </ScrollLink>
