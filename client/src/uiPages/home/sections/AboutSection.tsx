@@ -5,9 +5,12 @@ import { Link as ScrollLink } from 'react-scroll'
 
 export function AboutSection() {
   return (
-    <section id="about" className="section-fullscreen bg-background overflow-hidden">
+    <section
+      id="about"
+      className="section-fullscreen bg-background overflow-hidden"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="flex items-center justify-center p-10">
+        <div data-aos="fade-up" className="flex items-center justify-center p-10">
           <img
             className="w-80 h-auto"
             src="/images/about-section/about.png"
@@ -16,7 +19,7 @@ export function AboutSection() {
             height={320}
           />
         </div>
-        <div className="flex flex-col items-center lg:items-start justify-center gap-8">
+        <div data-aos="fade-up" className="flex flex-col items-center lg:items-start justify-center gap-8">
           <h1 className="text-2xl lg:text-4xl text-center lg:text-start font-doto font-bold uppercase">
             About Me
           </h1>

@@ -28,7 +28,7 @@ export function SkillsSection() {
     <section id="skills" className="section-fullscreen bg-background">
       <div className="w-full flex flex-col items-center justify-center gap-10">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center gap-4">
+        <div data-aos="fade-up" className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-2xl lg:text-4xl text-center font-doto font-bold uppercase">
             My Skills
           </h1>
@@ -40,7 +40,7 @@ export function SkillsSection() {
         {/* Skills Grid */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* LEFT - Sticky Image (Desktop Only) */}
-          <div className="flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
+          <div data-aos="fade-up" className="flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
             <img
               className="w-80 h-auto"
               src="/images/skills-section/skills.png"
@@ -51,7 +51,7 @@ export function SkillsSection() {
           </div>
 
           {/* RIGHT - Scrollable Skills (Desktop Only) */}
-          <div className="flex flex-col items-center justify-start gap-10">
+          <div data-aos="fade-up" className="flex flex-col items-center justify-start gap-10">
             {displaySkills.map((skillCategory, index) => (
               <SkillCard
                 key={index}

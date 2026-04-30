@@ -17,6 +17,7 @@ export function Footer() {
     <section
       id="footer"
       className="relative w-full bg-background py-8 sm:py-10 md:py-12 lg:py-14 space-y-8"
+      data-aos="fade-up"
     >
       <div className="section-px ">
         <div className="flex flex-col items-center gap-6">

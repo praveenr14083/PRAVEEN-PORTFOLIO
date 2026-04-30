@@ -66,7 +66,10 @@ export function HeroSection() {
             </ScrollLink>
           </div>
         </div>
-        <div className="flex items-center justify-center lg:justify-end order-1 lg:order-2 p-10">
+        <div
+          data-aos="zoom-in"
+          className="flex items-center justify-center lg:justify-end order-1 lg:order-2 p-10"
+        >
           <Image
             className="w-80 lg:w-100 h-auto"
             src="/images/hero-section/hero.png"

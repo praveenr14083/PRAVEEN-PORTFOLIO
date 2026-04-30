@@ -8,7 +8,7 @@ export function ContactSection() {
     <section id="contact" className="section-fullscreen bg-background">
       <div className="w-full flex flex-col items-center justify-center gap-10">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center gap-4">
+        <div data-aos="fade-up" className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-2xl lg:text-4xl text-center font-doto font-bold uppercase">
             Contact Me
           </h1>
@@ -18,7 +18,7 @@ export function ContactSection() {
         </div>
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-5 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
+          <div data-aos="fade-up" className="space-y-5 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
             <img
               className="w-80 h-auto"
               src="/images/contact-section/contact.png"
@@ -28,11 +28,11 @@ export function ContactSection() {
             />
           </div>
 
-          <div>
+          <div data-aos="fade-up">
             <ContactForm />
           </div>
         </div>
-        <div className="w-full">
+        <div data-aos="fade-up" className="w-full">
           <Card className="rounded-none bg-background border border-black/[0.2] dark:border-white/[0.2]  relative">
             <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
             <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />

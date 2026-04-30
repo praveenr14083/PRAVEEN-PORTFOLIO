@@ -66,7 +66,7 @@ export function ProjectsSection() {
     <section id="projects" className="section-fullscreen bg-background py-20">
       <div className="w-full flex flex-col items-center gap-12">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center gap-4 text-center">
+        <div data-aos="fade-up" className="flex flex-col items-center justify-center gap-4 text-center">
           <h1 className="text-2xl lg:text-4xl font-doto font-bold uppercase">Featured Projects</h1>
           <p className="max-w-150 text-md text-muted-foreground text-center">
             Showcasing innovation and technical expertise across Frontend, Fullstack, and AI
@@ -75,7 +75,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-1 p-1 bg-foreground/5 rounded-full backdrop-blur-sm border border-border/50">
+        <div data-aos="fade-up" className="flex flex-wrap justify-center gap-1 p-1 bg-foreground/5 rounded-full backdrop-blur-sm border border-border/50">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -101,7 +101,7 @@ export function ProjectsSection() {
         )}
 
         {/* Projects Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 gap-10">
+        <div data-aos="fade-up" className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 gap-10">
           {visibleProjects.map((project: UIProject) => (
             <ProjectCard key={project.id} project={project} />
           ))}

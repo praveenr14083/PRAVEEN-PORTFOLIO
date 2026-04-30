@@ -63,7 +63,7 @@ export function MyJourneySection() {
     <section id="journey" className="section-fullscreen bg-background">
       <div className="w-full flex flex-col items-center justify-center gap-10">
         {/* Header */}
-        <div className="flex flex-col items-center justify-center gap-4">
+        <div data-aos="fade-up" className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-2xl lg:text-4xl text-center font-doto font-bold uppercase">
             My Journey
           </h1>
@@ -73,7 +73,7 @@ export function MyJourneySection() {
         </div>
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-          <div className="order-2 md:order-1 flex flex-col gap-8">
+          <div data-aos="fade-up" className="order-2 md:order-1 flex flex-col gap-8">
             {/* Experience */}
             <div className="space-y-2">
               <div className="flex items-center gap-5">
@@ -106,7 +106,7 @@ export function MyJourneySection() {
             </div>
           </div>
 
-          <div className="order-1 md:order-2 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
+          <div data-aos="fade-up" className="order-1 md:order-2 flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
             <img
               className="w-80 h-auto"
               src="/images/myjourney-section/myjourney.png"

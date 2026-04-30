@@ -34,10 +34,13 @@ export function CertificateSection() {
   const displayCertificates = [...certificates, ...certificates, ...certificates]
 
   return (
-    <section id="certificates" className="section-flexible w-full bg-background overflow-hidden">
+    <section
+      id="certificates"
+      className="section-flexible w-full bg-background overflow-hidden"
+    >
       <div className="w-full flex flex-col items-center gap-12">
         {/* Carousel Container */}
-        <div className="w-full py-10 relative">
+        <div data-aos="fade-up" className="w-full py-10 relative">
           {/* Smoke Overlays */}
           <div className="absolute left-0 top-0 bottom-0 w-10 md:w-40 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-10 md:w-40 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none" />
