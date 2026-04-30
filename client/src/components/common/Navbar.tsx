@@ -29,15 +29,7 @@ export function Navbar() {
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <ScrollLink
-            to="hero-section"
-            smooth={true}
-            duration={500}
-            offset={-70}
-            spy={true}
-            activeClass="text-primary-color"
-            className={`text-xl font-doto cursor-pointer transition-colors`}
-          >
+          <ScrollLink to="hero-section" smooth={true} duration={500} offset={-70} spy={true}>
             PRAVEEN
           </ScrollLink>
         </div>
