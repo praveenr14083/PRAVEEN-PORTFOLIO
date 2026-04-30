@@ -37,6 +37,7 @@ export function HeroSection() {
                     "<span style='color:#8f48d2'>Praveen</span>",
                     "a <span style='color:#8f48d2'>Web Developer</span>",
                     "a <span style='color:#8f48d2'>Fullstack Developer</span>",
+                    "a <span style='color:#8f48d2'>Gen AI Developer</span>",
                     "a <span style='color:#8f48d2'>Frontend Developer</span>",
                     "a <span style='color:#8f48d2'>UI Developer</span>",
                     "a <span style='color:#8f48d2'>Designer</span>",

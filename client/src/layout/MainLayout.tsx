@@ -18,6 +18,18 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const showLoading = isLoading || !minTimeElapsed
 
+  React.useEffect(() => {
+    if (showLoading) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [showLoading])
+
   return (
     <>
       {showLoading && <LoadingScreen />}

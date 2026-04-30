@@ -34,7 +34,9 @@ export function Navbar() {
             smooth={true}
             duration={500}
             offset={-70}
-            className={`text-xl font-doto cursor-pointer`}
+            spy={true}
+            activeClass="text-primary-color"
+            className={`text-xl font-doto cursor-pointer transition-colors`}
           >
             PRAVEEN
           </ScrollLink>
@@ -49,7 +51,9 @@ export function Navbar() {
                   smooth={true}
                   duration={500}
                   offset={-70} // Adjust based on your navbar height
-                  className="hover:text-primary-color cursor-pointer"
+                  spy={true}
+                  activeClass="text-primary-color"
+                  className="hover:text-primary-color cursor-pointer transition-colors"
                 >
                   {item.name}
                 </ScrollLink>
@@ -102,8 +106,10 @@ export function DropdownMenu({ onClose, resumeUrl }: { onClose: () => void; resu
               smooth={true}
               duration={500}
               offset={-70}
+              spy={true}
+              activeClass="text-primary-color"
               onClick={onClose}
-              className="hover:text-primary-color flex items-center gap-3 cursor-pointer"
+              className="hover:text-primary-color flex items-center gap-3 cursor-pointer transition-colors"
             >
               <item.icon size={20} />
               {item.name}
