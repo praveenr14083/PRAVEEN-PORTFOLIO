@@ -1,6 +1,7 @@
 'use client'
 import { ButtonRounded } from '@/components/common/ButtonRounded'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import { Link as ScrollLink } from 'react-scroll'
 import Typewriter from 'typewriter-effect'
 
@@ -8,7 +9,7 @@ export function HeroSection() {
   return (
     <section
       id="hero-section"
-      className="section-fullscreen flex items-center relative overflow-hidden"
+      className="section-fullscreen flex items-center relative overflow-hidden pb-16 md:pb-8"
     >
       {/* Gradient Glow */}
       <div className="pointer-events-none absolute inset-0">
@@ -33,12 +34,12 @@ export function HeroSection() {
               <Typewriter
                 options={{
                   strings: [
-                    "<span style='color:#00A3E0'>Praveen</span>",
-                    "a <span style='color:#00A3E0'>Web Developer</span>",
-                    "a <span style='color:#00A3E0'>Fullstack Developer</span>",
-                    "a <span style='color:#00A3E0'>Frontend Developer</span>",
-                    "a <span style='color:#00A3E0'>UI Developer</span>",
-                    "a <span style='color:#00A3E0'>Designer</span>",
+                    "<span style='color:#8f48d2'>Praveen</span>",
+                    "a <span style='color:#8f48d2'>Web Developer</span>",
+                    "a <span style='color:#8f48d2'>Fullstack Developer</span>",
+                    "a <span style='color:#8f48d2'>Frontend Developer</span>",
+                    "a <span style='color:#8f48d2'>UI Developer</span>",
+                    "a <span style='color:#8f48d2'>Designer</span>",
                   ],
                   autoStart: true,
                   loop: true,
@@ -65,7 +66,14 @@ export function HeroSection() {
           </div>
         </div>
         <div className="flex items-center justify-center lg:justify-end order-1 lg:order-2 p-10">
-          <img className="w-96" src="/images/praveen.png" alt="" />
+          <Image
+            className="w-80 lg:w-100 h-auto"
+            src="/images/hero-section/hero.png"
+            alt="Praveen - Full Stack Developer"
+            width={320}
+            height={320}
+            priority
+          />
         </div>
       </div>
     </section>

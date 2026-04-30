@@ -4,6 +4,7 @@ import { usePortfolio } from '@/hooks/usePortfolio'
 import AutoScroll from 'embla-carousel-auto-scroll'
 import useEmblaCarousel from 'embla-carousel-react'
 import { X } from 'lucide-react'
+import Image from 'next/image'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { CERTIFICATES_DATA } from '../data/certificates'
@@ -20,7 +21,7 @@ export function CertificateSection() {
     [
       AutoScroll({
         playOnInit: true,
-        speed: 2,
+        speed: 1,
         stopOnInteraction: false,
         stopOnMouseEnter: false,
       }),
@@ -39,8 +40,8 @@ export function CertificateSection() {
         {/* Carousel Container */}
         <div className="w-full py-10 relative">
           {/* Smoke Overlays */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-10 md:w-40 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-10 md:w-40 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none" />
 
           <div className="overflow-hidden w-full cursor-grab active:cursor-grabbing" ref={emblaRef}>
             <div className="flex touch-pan-y" style={{ backfaceVisibility: 'hidden' }}>
@@ -50,11 +51,12 @@ export function CertificateSection() {
                   className="flex-[0_0_auto] min-w-0 group relative mr-4 md:mr-8"
                   onClick={() => setSelectedImage(cert.image.url)}
                 >
-                  <div className="w-[300px] md:w-[400px] aspect-[1.4/1] rounded-xl overflow-hidden">
-                    <img
+                  <div className="w-[300px] md:w-[400px] aspect-[1.4/1] rounded-xl overflow-hidden relative">
+                    <Image
                       src={cert.image.url}
                       alt={cert.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Hover Overlay */}

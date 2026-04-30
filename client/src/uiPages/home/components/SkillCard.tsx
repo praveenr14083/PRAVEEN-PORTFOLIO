@@ -9,7 +9,7 @@ type SkillCardProps = {
 
 export function SkillCard({ title, description, Icon, skills }: SkillCardProps) {
   return (
-    <div className="rounded-none bg-card/40 backdrop-blur-3xl border border-border  relative p-6 flex flex-col gap-6">
+    <div className="rounded bg-card/80 backdrop-blur-3xl border border-border  relative p-6 flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <div className="p-2 bg-primary-color text-white rounded">

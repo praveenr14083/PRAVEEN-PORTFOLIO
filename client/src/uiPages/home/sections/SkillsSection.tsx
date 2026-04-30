@@ -1,6 +1,7 @@
 'use client'
 import { usePortfolio } from '@/hooks/usePortfolio'
 import { Brain, Database, Monitor, Server } from 'lucide-react'
+import Image from 'next/image'
 import { SkillCard } from '../components/SkillCard'
 import { SKILLS_DATA } from '../data/skills'
 
@@ -41,7 +42,13 @@ export function SkillsSection() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* LEFT - Sticky Image (Desktop Only) */}
           <div className="flex flex-col items-center lg:sticky lg:top-30 lg:self-start">
-            <img className="w-96" src="/images/skills.png" alt="Praveen" />
+            <Image
+              className="w-80 h-auto"
+              src="/images/skills-section/skills.png"
+              alt="Praveen's Skills"
+              width={320}
+              height={320}
+            />
           </div>
 
           {/* RIGHT - Scrollable Skills (Desktop Only) */}

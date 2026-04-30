@@ -18,17 +18,17 @@ export function EdExCard({ data }: EdExCardProps) {
         <div className={`p-2 rounded-full ${data.isCurrent ? 'bg-white' : 'bg-primary-color'}`} />
 
         {/* Vertical Line */}
-        <div className="border-l-1 border-dashed border-primary-color h-full w-[1px]"></div>
+        <div className="border-l border-dashed border-white/50 h-full w-[1px]"></div>
       </div>
 
       {/* Content */}
-      <div className="w-full space-y-4 p-5">
+      <div className="w-full space-y-2 p-5">
         {/* Year */}
-        <p className="text-primary-color">{data.year}</p>
+        <p className="text-primary-color/90">{data.year}</p>
 
         {/* Course and Institute */}
         <div className="space-y-1">
-          <h1 className="text-lg font-semibold">{data.title}</h1>
+          <h1 className="text-lg font-bold">{data.title}</h1>
           <p className="text-muted-foreground">{data.description}</p>
         </div>
 

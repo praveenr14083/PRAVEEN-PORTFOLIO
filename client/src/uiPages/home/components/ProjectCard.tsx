@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Icon } from '@/components/ui/evervault-card'
 import { UIProject } from '@/types/portfolio'
 import { ExternalLink, Github } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 interface ProjectCardProps {
@@ -10,17 +11,18 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <div className="group border border-black/[0.2] dark:border-white/[0.2] p-4 relative min-h-[30rem]">
+    <div className="group border border-black/[0.2] dark:border-white/[0.2] p-6 relative">
       <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
       <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />
       <Icon className="absolute h-6 w-6 -top-3 -right-3 dark:text-white text-black" />
       <Icon className="absolute h-6 w-6 -bottom-3 -right-3 dark:text-white text-black" />
       {/* Image Container */}
       <div className="relative w-full h-48 overflow-hidden">
-        <img
+        <Image
           src={project.image}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
           <Link
@@ -43,9 +45,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col grow gap-4">
+      <div className="mt-4 flex flex-col gap-4">
         <div className="flex justify-between items-start">
-          <h3 className="text-xl font-bold line-clamp-1 group-hover:text-primary-color transition-colors">
+          <h3 className="text-xl font-bold group-hover:text-primary-color transition-colors">
             {project.title}
           </h3>
           <Badge variant="outline" className="text-xs">
@@ -53,7 +55,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </Badge>
         </div>
 
-        <p className="text-muted-foreground text-sm line-clamp-3 grow">{project.description}</p>
+        <p className="text-muted-foreground text-sm ">{project.description}</p>
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-2 mt-auto">
