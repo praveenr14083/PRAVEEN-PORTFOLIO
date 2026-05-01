@@ -23,13 +23,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-          <Link
-            href={project.github}
-            target="_blank"
-            className="p-2 bg-background/80 rounded-full hover:bg-primary-color hover:text-white transition-colors"
-          >
-            <Github size={20} />
-          </Link>
+          {project.github && (
+            <Link
+              href={project.github}
+              target="_blank"
+              className="p-2 bg-background/80 rounded-full hover:bg-primary-color hover:text-white transition-colors"
+            >
+              <Github size={20} />
+            </Link>
+          )}
           {project.demo && (
             <Link
               href={project.demo}

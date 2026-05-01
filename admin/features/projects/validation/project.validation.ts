@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  technologies: z.string().min(1, "Technologies required"),
+  description: z.string().optional().or(z.literal("")),
+  technologies: z.string().optional().or(z.literal("")),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published"]),
   featured: z.boolean().default(false),

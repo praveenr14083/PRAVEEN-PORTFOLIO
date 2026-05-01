@@ -30,13 +30,13 @@ export function ProjectsSection() {
       fetchedProjects && fetchedProjects.length > 0 ? fetchedProjects : PROJECTS_DATA
     return dataToDisplay.map((p: any) => ({
       id: p._id || p.id,
-      title: p.title,
-      description: p.description,
-      tech: p.technologies || [],
-      demo: p.liveUrl,
-      github: p.githubUrl,
+      title: p.title || '',
+      description: p.description || '',
+      tech: Array.isArray(p.technologies) ? p.technologies : [],
+      demo: p.liveUrl || '',
+      github: p.githubUrl || '',
       image: p.image?.url || 'https://placehold.co/600x400/png',
-      category: p.category,
+      category: p.category || '',
     }))
   }, [fetchedProjects])
 

@@ -32,13 +32,31 @@ export const updateProject = async (id, data) => {
     }
   }
 
+  const updateData = { ...data }
+  const unsetData = {}
+
   if (data.image === null) {
-    logger.debug('Project Service: Removing image from DB using $unset')
-    const { image, ...updateData } = data
-    return await Project.findByIdAndUpdate(id, { ...updateData, $unset: { image: 1 } }, { new: true })
+    delete updateData.image
+    unsetData.image = 1
   }
 
-  return await Project.findByIdAndUpdate(id, data, { new: true })
+  // If URLs are empty strings or null, unset them to clear from DB
+  if (data.liveUrl === "" || data.liveUrl === null) {
+    delete updateData.liveUrl
+    unsetData.liveUrl = 1
+  }
+
+  if (data.githubUrl === "" || data.githubUrl === null) {
+    delete updateData.githubUrl
+    unsetData.githubUrl = 1
+  }
+
+  const query = { $set: updateData }
+  if (Object.keys(unsetData).length > 0) {
+    query.$unset = unsetData
+  }
+
+  return await Project.findByIdAndUpdate(id, query, { new: true })
 }
 
 export const deleteProject = async (id) => {
