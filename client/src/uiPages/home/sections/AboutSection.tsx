@@ -24,11 +24,7 @@ export function AboutSection() {
             About Me
           </h1>
           <p className="text-md text-muted-foreground text-center lg:text-justify ">
-            I am Praveen R, a B.Sc. Computer Science graduate with a solid programming foundation. I
-            specialize as a Full-Stack Developer using React, Next.js, and FastAPI. I work with both
-            SQL and NoSQL databases like Firebase. I combine technical expertise with design skills
-            to build complete, responsive web applications. I'm passionate about learning new
-            technologies and creating impactful digital experiences.
+            I am Praveen R, a B.Sc. Computer Science graduate with a solid programming foundation. I specialize as a Full-Stack Developer using React, Next.js, Node.js, and FastAPI. I work with both SQL and NoSQL databases like Firebase. I combine technical expertise with design skills to build complete, responsive web applications. I'm passionate about learning new technologies and creating impactful digital experiences.
           </p>
           <ScrollLink to="contact" smooth={true} duration={500} offset={-70}>
             <ButtonRounded icon={BriefcaseBusiness}>Hire Me</ButtonRounded>
